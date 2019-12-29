@@ -35,6 +35,7 @@ namespace RepositoryLayer.Interface
         /// <returns></returns>
         Task<string> Login(LoginModel loginmodel);
 
+        Task<bool> IsLoginWithGoogle(SocialLoginModel socialLoginModel);
         /// <summary>
         /// Forgets the password.
         /// </summary>

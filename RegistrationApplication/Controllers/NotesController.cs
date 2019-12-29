@@ -371,11 +371,13 @@ namespace FundooNotesAPI.Controllers
             var data = await this.notesBusinessLayer.AddCollabrator(showCollabrateModel,UserId);
             if (data!=null)
             {
+                status = "true";
                  message = "Collabration is Done!";
-                return Ok(new { status,message});
+                return Ok(new { status,message,data});
             }
             else {
-                 message = "Invalid Email or Note Id";
+                status = "false";
+                message = "Invalid Email or Note Id";
                 return BadRequest(new { status, message });
             }            
         }

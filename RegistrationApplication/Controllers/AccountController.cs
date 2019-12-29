@@ -48,7 +48,7 @@ namespace FundooNotesAPI.Controllers
         /// <returns>registration complet</returns>
         [HttpPost("Registertion")] 
         [AllowAnonymous]
-        public async Task<IActionResult> Registration([FromForm] AccountModel data)
+        public async Task<IActionResult> Registration( AccountModel data)
         {
             var status = await account.Registration(data);
 
@@ -86,6 +86,25 @@ namespace FundooNotesAPI.Controllers
             {
                 string message = "Not Login";
                 return BadRequest(new { status, message }); 
+            }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginWithGoogle(SocialLoginModel socialLoginModel)
+        {
+            int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
+            var data = await this.account.LoginWithGoogle(socialLoginModel);
+
+            if (data == true)
+            {
+                string message = "Login with Google";
+                return Ok(new { data, message });
+            }
+            else
+            {
+                string message = "Logout from Google";
+                return Ok(new { data, message });
             }
         }
 
@@ -159,21 +178,6 @@ namespace FundooNotesAPI.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> LoginWithGoogle(bool IsGoogle)
-        {
-            int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
-            var data = await this.account.LoginWithGoogle(IsGoogle, UserId);
-
-            if (data == true)
-            {
-                string message = "Login with Google";
-                return Ok(new { data, message });
-            }
-            else {
-                string message = "Logout from Google";
-                return Ok(new { data, message });
-            }
-        }
+        
     }
 }

@@ -76,6 +76,18 @@ namespace BusinessLayer.Services
             }
         }
 
+        public async Task<bool> LoginWithGoogle(SocialLoginModel socialLoginModel)
+        {
+            if (socialLoginModel != null)
+            {
+                var result = await this.account.IsLoginWithGoogle(socialLoginModel);
+                return result;
+            }
+            else {
+                return false;
+            }
+
+        }
         /// <summary>
         /// Forgets the password.
         /// </summary>

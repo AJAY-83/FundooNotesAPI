@@ -536,12 +536,24 @@ namespace RepositoryLayer.Services
         {            
             //// checks the NoteId exist or not            
             var idChecking = this.authenticationContext.UserAccountTable.FirstOrDefault(u => u.Id == showCollabrateModel.ReceiverId );
+            ////checking the Note Id is available in database or  not
+            var notesIdCheck = this.authenticationContext.Notes.FirstOrDefault(u => u.Id == showCollabrateModel.NoteId);
+
+            //// ifn ot present into the database i will return the null 
+            if (notesIdCheck == null)
+            {
+                return null;
+            }
+                
+            //// here   checking  the Collabrated user is present into database or not
             if (idChecking != null)
                 {
+
                   var  collabratorModel = new CollabratorModel()
                     {
                         UserId = UserId,
-                        NotesId = showCollabrateModel.NoteId
+                        NotesId = showCollabrateModel.NoteId,
+                        ReceiverId=showCollabrateModel.ReceiverId
                     };
 
                 //// inserting the Collabrator records inside the table 
@@ -550,7 +562,10 @@ namespace RepositoryLayer.Services
                 //// cerating  the response object here display the only needed  information of the user
                    var response = new CollabratorModel() {
                     UserId=collabratorModel.UserId,
-                    NotesId=collabratorModel.NotesId                    
+                    NotesId=collabratorModel.NotesId,
+                    ReceiverId=collabratorModel.ReceiverId,
+                    Id=collabratorModel.Id
+                    
                    };
                 //// return the expecterd output 
                     return response;

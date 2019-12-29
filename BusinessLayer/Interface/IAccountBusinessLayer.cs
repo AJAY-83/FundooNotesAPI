@@ -33,12 +33,14 @@ namespace BusinessLayer.Interface
         /// <returns></returns>
         Task<string> Login(LoginModel loginmodel);
 
+     
+        Task<bool> LoginWithGoogle(SocialLoginModel socialLoginModel);
         /// <summary>
         /// Forgets the password.
         /// </summary>
         /// <param name="passwordModel">The password model.</param>
         /// <returns></returns>
-       Task<string> ForgetPassword(ForgetPasswordModel passwordModel);
+        Task<string> ForgetPassword(ForgetPasswordModel passwordModel);
 
         /// <summary>
         /// Resets the password.
@@ -55,6 +57,6 @@ namespace BusinessLayer.Interface
         /// <returns>Profile uploaded or not</returns>
         Task<bool> ProfilePicture(int id, IFormFile file);
 
-        Task<bool> LoginWithGoogle(bool IsGoogle,int UserId);
+        
     }
 }

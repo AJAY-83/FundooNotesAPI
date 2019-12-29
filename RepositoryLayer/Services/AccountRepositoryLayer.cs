@@ -63,30 +63,50 @@ namespace RepositoryLayer.Services
         {
             try
             {
-               var  users = new AccountModel()
+                var users = new AccountModel()
                 {
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     MobileNumber = model.MobileNumber,
                     Email = model.Email,
-                    Password=model.Password,
-                    TypeOfUser=model.TypeOfUser,
-                    IsFacebook=model.IsFacebook,
-                    IsGoogle=model.IsGoogle
+                    Password = model.Password,
+                    TypeOfUser = model.TypeOfUser,
+                    IsFacebook = model.IsGoogle,
+                    IsGoogle = model.IsFacebook
                 };
 
                 //// checking the email id is already exists 
                 //// if exist he doen't register
                 bool UsernameExists = authentication.UserAccountTable.Any(x => x.Email == model.Email);
 
-                if (UsernameExists)
-                    return false;
+                if (UsernameExists){
+                   return false;
+                 }                     
 
                 this.authentication.UserAccountTable.Add(users);
                 var result = await this.authentication.SaveChangesAsync();
 
                 if (result > 0)
                 {
+                    var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuraion["SecretKey:Key"]));
+
+                    var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+
+                    var claims = new List<Claim>
+                     {
+                      
+                      new Claim("Email", model.Email),
+                      new Claim(ClaimTypes.Role, "User")
+                      };
+
+                    var tokeOptions = new JwtSecurityToken(
+                       claims: claims,
+                       expires: DateTime.Now.AddDays(1),
+                       signingCredentials: signinCredentials
+                   );
+
+                    var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+                    //return tokenString;
                     return true;
                 }
                 else{
@@ -141,6 +161,11 @@ namespace RepositoryLayer.Services
                 {
                    return ErrorMessages.InvalidUser;
                 }
+        }
+
+        public async Task<bool> IsLoginWithGoogle(SocialLoginModel socialLoginModel)
+        {
+            return true;
         }
 
         /// <summary>
