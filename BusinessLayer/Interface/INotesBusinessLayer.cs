@@ -161,5 +161,10 @@ namespace BusinessLayer.Interface
         /// </summary>
         /// <returns></returns>
         IList<AccountModel> Users();
+
+
+        bool BulkTrash(List<int> Id, int UserId);
+
+        bool BulkUnTrash(List<int> Id, int UserId);
     }
 }

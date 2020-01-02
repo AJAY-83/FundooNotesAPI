@@ -10,7 +10,11 @@ namespace RegistrationApplication
     using System.Threading.Tasks;
     using BusinessLayer.Interface;
     using BusinessLayer.Services;
+    using CloudinaryDotNet;
+    using Microsoft.AspNetCore.Authentication.Cookies;
+    using Microsoft.AspNetCore.Authentication.Facebook;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Authentication.OAuth;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.HttpsPolicy;
@@ -22,6 +26,9 @@ namespace RegistrationApplication
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
+    using Microsoft.Owin.Security.Facebook;
+    using Microsoft.Owin.Security.Google;
+    using Owin;
     using RepositoryLayer.Context;
     using RepositoryLayer.Interface;
     using RepositoryLayer.Services;
@@ -34,6 +41,15 @@ namespace RegistrationApplication
     /// </summary>
     public class Startup
     {
+
+        ////public static OAuthBearerAuthenticationOptions OAuthBearerOptions { get; private set; }
+        public static GoogleOAuth2AuthenticationOptions googleAuthOptions { get; private set; }
+        public static FacebookAuthenticationOptions facebookAuthOptions { get; private set; }
+
+
+
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
@@ -98,6 +114,14 @@ namespace RegistrationApplication
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
 
+            
+             //.AddAuthentication().AddFacebook(facebookOptions =>
+             //{
+             //    facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+             //    facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+             //}).AddCookie();
+
+
             //// JWT(Json Web Token) it is use to Authenticate the user
            .AddJwtBearer(options =>
        {
@@ -113,19 +137,35 @@ namespace RegistrationApplication
            };
        });
 
-            //// Google Authentication API
-            services.AddAuthentication().AddGoogle(googleOptions =>
-            {
-                googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
-                googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-            });
-
             //// Facebook Authentication API
-            services.AddAuthentication().AddFacebook(facebookOptions =>
-            {
-                facebookOptions.AppId = Configuration["Authentication:Facebook:AppID"];
-                facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-            });
+            //services.AddAuthentication().AddFacebook(facebookOptions =>
+            //{
+            //    facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+            //    facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+            //});
+
+    //        services.AddAuthentication().AddOAuth("Facebook", "Facebook", c =>
+    //        {
+
+    //c.Events = new OAuthEvents()
+    //{
+    //    OnRemoteFailure = (context) =>
+    //    {
+    //        context.Response.Redirect(context.Properties.GetString("l"));
+    //        context.HandleResponse();
+    //        return Task.CompletedTask;
+    //    }
+    //};
+    //        });
+
+            //// Google Authentication API
+            //services.AddAuthentication().AddGoogle(googleOptions =>
+            //{
+            //    googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
+            //    googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+            //});
+
+            
 
             //// Here have the CORS(Cross Origin Resource Sharing) 
             services.AddCors(options =>
@@ -161,6 +201,19 @@ namespace RegistrationApplication
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddAuthentication(Options => {
+                Options.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme;
+                Options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                Options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddFacebook(Options => {
+               Options.AppId = Configuration["Authentication:Facebook:AppId"];
+               Options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+
+                //Options.AppId = "593511308133793";
+                //Options.AppSecret= "86879ff78761170c4a6fc6df5b9110d3";
+            }).AddCookie();
+
         }
 
         /// <summary>
@@ -179,12 +232,15 @@ namespace RegistrationApplication
             {
                 app.UseHsts();
             }
-
+          //  app.UseCors(x => x.AllowAnyOrigin()
+            //.AllowAnyHeader().AllowAnyMethod()
+            //);
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "My Fundoo API (V 1.0)");
             });
+            app.UseCors();
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();

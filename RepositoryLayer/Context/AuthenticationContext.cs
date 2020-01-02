@@ -62,6 +62,6 @@ namespace RepositoryLayer.Context
         public DbSet<NoteLabel> NoteLabel { get; set; }
 
         public DbSet<CollabratorModel> Collabrator { get; set; }
-        //public DbSet<LabelModel> LabelTable { get; set; }
+        //public DbSet<LabelModel> LabelTable { get; set; }       
     }
 }

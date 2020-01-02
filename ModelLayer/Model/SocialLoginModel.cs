@@ -4,10 +4,9 @@ using System.Text;
 
 namespace CommonLayer.Model
 {
-   public class SocialLoginModel
+  public  class SocialLoginModel
     {
-        public bool LoginWithGoogle { get; set; }
-
-        public bool LoginWithFacebook { get; set; }
+        public bool IsFacebook { get; set; }
+        public bool IsGoogle { get; set; }
     }
 }

@@ -384,5 +384,30 @@ namespace BusinessLayer.Services
             var result = this.notesRepositoryLayer.Users();
             return result;
         }
+
+        public bool BulkTrash(List<int> Id, int UserId)
+        {
+            try
+            {
+                var result = this.notesRepositoryLayer.BulkTrash(Id, UserId);
+                return result;
+            }catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public bool BulkUnTrash(List<int> Id, int UserId)
+        {
+            try
+            {
+                var result = this.notesRepositoryLayer.BulkTrash(Id, UserId);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

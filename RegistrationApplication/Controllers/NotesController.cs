@@ -197,7 +197,7 @@ namespace FundooNotesAPI.Controllers
         /// </summary>
         /// <param name="Id">The identifier.</param>
         /// <returns>trashe or untrash</returns>
-        [HttpPost("Trash/{Id}")]
+        [HttpPost("{Id}/Trash")]
         public async Task<IActionResult> Trashed(int Id)
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
@@ -233,7 +233,7 @@ namespace FundooNotesAPI.Controllers
         /// <param name="UserId">The user identifier.</param>
         /// <param name="Id">The identifier.</param>
         /// <returns>Archive or UnArchive</returns>
-        [HttpPut("Archive/{Id}")]
+        [HttpPut("{Id}/Archive")]
         public async Task<IActionResult> IsArchive( int Id)
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
@@ -254,7 +254,7 @@ namespace FundooNotesAPI.Controllers
         /// </summary>
         /// <param name="Id">The identifier.</param>
         /// <returns>Pin and UnPin</returns>
-        [HttpPut("Pin/{Id}")]
+        [HttpPut("{Id}/Pin")]
         public async Task<IActionResult> IsPin(int Id)
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
@@ -278,7 +278,7 @@ namespace FundooNotesAPI.Controllers
         /// <param name="Color">The color.</param>
         /// <returns>Change Color</returns>
         [HttpPut("SetColor")]
-        public async Task<IActionResult> ChangeColor( ColorRequest colorRequest)
+        public async Task<IActionResult> SetColor( ColorRequest colorRequest)
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
             var data = await this.notesBusinessLayer.ChangeColor(UserId, colorRequest);
@@ -329,7 +329,7 @@ namespace FundooNotesAPI.Controllers
         /// </summary>
         /// <param name="Id">The identifier.</param>
         /// <returns>Delete the reminder</returns>
-        [HttpDelete("Reminder/{Id}")]        
+        [HttpDelete("{Id}/Reminder")]        
         public async Task<IActionResult> DeleteReminder( int Id)
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
@@ -363,7 +363,7 @@ namespace FundooNotesAPI.Controllers
             return Ok(new { message });
         }
 
-        [HttpPost("Collabrator")]
+        [HttpPost("{Id}/Collabrator")]
         public async Task<IActionResult> Collabrator( ShowCollabrateModel showCollabrateModel)
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
@@ -382,7 +382,7 @@ namespace FundooNotesAPI.Controllers
             }            
         }
 
-        [HttpDelete("Collabrator/{Id}")]
+        [HttpDelete("{Id}/Collabrator")]
         public async Task<IActionResult> RemoveCollabrators(int Id)
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
@@ -403,6 +403,57 @@ namespace FundooNotesAPI.Controllers
         {
             var result = this.notesBusinessLayer.Users();
             return Ok(new { result });
+        }
+
+        [HttpPut("{Id}/BulkTrash")]
+        public IActionResult Bulktrash(List<int> Id)
+        {
+            try
+            {
+                int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
+                var status = this.notesBusinessLayer.BulkTrash(Id, UserId);
+
+                if (status == true)
+                {
+                    message = "Bulk Trashed";
+                    return Ok(new { message, status });
+                }
+                else
+                {
+                    message = "Not  Trashed";
+                    return BadRequest(new {message,status });
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+
+        [HttpPut("{Id}/BulkUnTrash")]
+        public IActionResult BulkUntrash(List<int> Id)
+        {
+            try
+            {
+                int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
+                var status = this.notesBusinessLayer.BulkUnTrash(Id ,UserId);
+
+                if (status == true)
+                {
+                    message = "Bulk UnTrashed";
+                    return Ok(new { message, status });
+                }
+                else
+                {
+                    message = "Not Trashed";
+                    return BadRequest(new { message, status });
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
     }

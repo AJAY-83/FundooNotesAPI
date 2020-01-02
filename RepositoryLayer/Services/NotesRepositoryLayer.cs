@@ -614,5 +614,112 @@ namespace RepositoryLayer.Services
             return users;
         }
 
+
+
+
+
+
+
+        public bool BulkTrash(List<int> NotesId, int UserId)
+        {
+
+            // List<NotesModel> note = new List<NotesModel>();
+            //// foreach loop to gets the Trashed Fields
+
+            try
+            {
+                foreach (var Id in NotesId)
+                {
+                    foreach (var note in this.authenticationContext.Notes)
+                    {
+                        //// checking the notes Id and UserId is Availabel or not into the databse
+                        var data = this.authenticationContext.Notes.Where(u =>u.Id==Id && u.UserId == UserId).FirstOrDefault();
+
+                        //// checks that is null or  not null
+                        if (data != null)
+                        {
+                            //// if IsTRash is true make it  false 
+                            /// it means untrashed the Notes and save it into the database
+                            if (data.IsTrash == false)
+                            {
+                                data.IsTrash = true;
+                                data.ModifiedDate = DateTime.Now;
+                            }
+                           
+                            //else
+                            //{
+                            //    //// if IsTrash is false then make it true
+                            //    //// means trash the Note and save into Database
+                            //    data.IsTrash = true;
+                            //    data.ModifiedDate = DateTime.Now;
+                            //}
+                                                
+                        }
+                        //var result = authenticationContext.Notes.Add(data);
+                       
+                    }
+                    this.authenticationContext.SaveChanges();
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }           
+        }
+
+
+        public bool BulkUnTrash( List<int> NotesId,int UserId)
+        {
+
+            // List<NotesModel> note = new List<NotesModel>();
+            //// foreach loop to gets the Trashed Fields
+
+            try
+            {
+                foreach (var Id in NotesId)
+                {
+                    foreach (var note in this.authenticationContext.Notes)
+                    {
+                        //// checking the notes Id and UserId is Availabel or not into the databse
+                        var data = this.authenticationContext.Notes.Where(u => u.UserId == UserId).FirstOrDefault();
+
+                        //// checks that is null or  not null
+                        if (data != null)
+                        {
+                            //// if IsTRash is true make it  false 
+                            /// it means untrashed the Notes and save it into the database
+                            if (data.IsTrash == true)
+                            {
+                                data.IsTrash = false;
+                                data.ModifiedDate = DateTime.Now;
+                            }
+                            else {
+                                return false;
+                            }
+                            //else
+                            //{
+                            //    //// if IsTrash is false then make it true
+                            //    //// means trash the Note and save into Database
+                            //    data.IsTrash = true;
+                            //    data.ModifiedDate = DateTime.Now;
+                            //}
+                        }
+                        //var result = authenticationContext.Notes.Add(data);
+                        
+                       
+                    }
+                    this.authenticationContext.SaveChanges();
+
+                }
+                return true;
+            }            
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+
     }
 }

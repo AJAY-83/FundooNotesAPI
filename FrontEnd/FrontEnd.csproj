@@ -7,6 +7,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Owin.Security.Facebook" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Owin.Security.Google" Version="2.1.0" />
   </ItemGroup>
 
 </Project>

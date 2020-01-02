@@ -160,5 +160,8 @@ namespace RepositoryLayer.Interface
         Task<bool> IsRemoveCollabrator(int Id, int UserId);
 
         IList<AccountModel> Users();
+
+        bool BulkTrash(List<int> Id, int UserId);
+        bool BulkUnTrash(List<int> Id,int UserId);
     }
 }

@@ -139,7 +139,8 @@ namespace FundooTestCases
                 Label = "string"
             };
 
-            var data = businesslayer.AddLabel(model);
+            var 
+                = businesslayer.AddLabel(model);
             Assert.NotNull(data);
         }
         

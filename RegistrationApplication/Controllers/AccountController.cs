@@ -17,7 +17,9 @@ namespace FundooNotesAPI.Controllers
     using System.Threading.Tasks;
     using BusinessLayer.Interface;
     using CommonLayer.Model;
+    using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.IdentityModel.Tokens;
@@ -26,11 +28,16 @@ namespace FundooNotesAPI.Controllers
     /// AccountContrtoller have Account name controller to handle the Application
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
+    [EnableCors]
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
         private IAccountBusinessLayer account;
+
+
+
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountController"/> class.
@@ -40,7 +47,15 @@ namespace FundooNotesAPI.Controllers
         {
             this.account = account;
         }
-    
+
+        [EnableCors]
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("signin-facebook")]
+        public IActionResult SignIn()
+        {
+            return Challenge(new AuthenticationProperties { RedirectUri = "/" });
+        }
         /// <summary>
         /// Registrations the specified model.
         /// </summary>
@@ -91,7 +106,7 @@ namespace FundooNotesAPI.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> LoginWithGoogle(SocialLoginModel socialLoginModel)
+        public async Task<IActionResult> LoginWithGoogle(SocialLoginModel socialLoginModel,string Url)
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
             var data = await this.account.LoginWithGoogle(socialLoginModel);
@@ -177,6 +192,10 @@ namespace FundooNotesAPI.Controllers
                 return BadRequest(new { status, message });
             }
         }
+
+        //// start the social login
+        
+
 
         
     }

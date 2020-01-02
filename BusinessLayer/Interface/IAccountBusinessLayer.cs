@@ -57,6 +57,6 @@ namespace BusinessLayer.Interface
         /// <returns>Profile uploaded or not</returns>
         Task<bool> ProfilePicture(int id, IFormFile file);
 
-        
+         
     }
 }
