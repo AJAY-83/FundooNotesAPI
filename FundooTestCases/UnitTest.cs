@@ -129,7 +129,7 @@ namespace FundooTestCases
         public void Label()
         {
             var Repository = new Mock<ILabelRepositoryLayer>();
-            var businesslayer = new LabelBusinessLayer(Repository.Object);
+            var businesslayer = new AdminBusinessService(Repository.Object);
 
             var model = new LabelModel()
             {
@@ -139,8 +139,7 @@ namespace FundooTestCases
                 Label = "string"
             };
 
-            var 
-                = businesslayer.AddLabel(model);
+            var data = businesslayer.AddLabel(model);
             Assert.NotNull(data);
         }
         

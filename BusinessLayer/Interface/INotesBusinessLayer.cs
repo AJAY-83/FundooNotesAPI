@@ -160,7 +160,7 @@ namespace BusinessLayer.Interface
         /// Userses this instance.
         /// </summary>
         /// <returns></returns>
-        IList<AccountModel> Users();
+  
 
 
         bool BulkTrash(List<int> Id, int UserId);

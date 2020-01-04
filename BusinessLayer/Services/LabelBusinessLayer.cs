@@ -19,14 +19,14 @@ namespace BusinessLayer.Services
     /// <summary>
     /// this is Business layer class it is used to  CRUD Operations on the Label
     /// </summary>
-    public class LabelBusinessLayer : ILabelBusinessLayer
+    public class AdminBusinessService : ILabelBusinessLayer
     {
         /// <summary>
         /// The labelrepositorylayer is the reference of the repository layer of Label
         /// </summary>
         private ILabelRepositoryLayer labelRepositoryLayer;
 
-        public LabelBusinessLayer(ILabelRepositoryLayer labelRepositoryLayer)
+        public AdminBusinessService(ILabelRepositoryLayer labelRepositoryLayer)
         {
             this.labelRepositoryLayer = labelRepositoryLayer;
         }

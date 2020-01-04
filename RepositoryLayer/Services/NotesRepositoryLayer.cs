@@ -599,27 +599,7 @@ namespace RepositoryLayer.Services
                 return false;
             }            
         }
-
-        /// <summary>
-        /// Userses this instance.
-        /// </summary>
-        /// <returns></returns>
-        public IList<AccountModel> Users()
-        {
-            List<AccountModel> users = new List<AccountModel>();
-            foreach (var line in this.authenticationContext.UserAccountTable)
-            {
-                users.Add(line);                             
-            }
-            return users;
-        }
-
-
-
-
-
-
-
+     
         public bool BulkTrash(List<int> NotesId, int UserId)
         {
 

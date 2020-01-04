@@ -398,12 +398,7 @@ namespace FundooNotesAPI.Controllers
                 return BadRequest(new { status, message });
             }
         }
-        [HttpPost("Users")]
-        public IActionResult DisplayUser()
-        {
-            var result = this.notesBusinessLayer.Users();
-            return Ok(new { result });
-        }
+        
 
         [HttpPut("{Id}/BulkTrash")]
         public IActionResult Bulktrash(List<int> Id)

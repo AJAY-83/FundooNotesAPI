@@ -379,11 +379,7 @@ namespace BusinessLayer.Services
             }
         }
 
-        public IList<AccountModel> Users()
-        {
-            var result = this.notesRepositoryLayer.Users();
-            return result;
-        }
+      
 
         public bool BulkTrash(List<int> Id, int UserId)
         {

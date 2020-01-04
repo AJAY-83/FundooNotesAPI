@@ -28,7 +28,6 @@ namespace FundooNotesAPI.Controllers
     /// AccountContrtoller have Account name controller to handle the Application
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
-    [EnableCors]
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
@@ -56,6 +55,16 @@ namespace FundooNotesAPI.Controllers
         {
             return Challenge(new AuthenticationProperties { RedirectUri = "/" });
         }
+
+        [EnableCors]
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("signin-google")]
+        public IActionResult SignInGoogle()
+        {
+            return Challenge(new AuthenticationProperties { RedirectUri = "/" });
+        }
+
         /// <summary>
         /// Registrations the specified model.
         /// </summary>
