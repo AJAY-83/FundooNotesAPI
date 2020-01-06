@@ -174,17 +174,17 @@ namespace RegistrationApplication
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             //// Faceboo Authentication code is here
-            services.AddAuthentication(Options => {
-                Options.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme;
-                Options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                Options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            })
+            //services.AddAuthentication(Options => {
+            //    Options.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme;
+            //    Options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //    Options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //})
             
-            //// Adding the AppId and AppSecret key 
-            .AddFacebook(Options => {
-               Options.AppId = Configuration["Authentication:Facebook:AppId"];
-               Options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-            }).AddCookie();
+            ////// Adding the AppId and AppSecret key 
+            //.AddFacebook(Options => {
+            //   Options.AppId = Configuration["Authentication:Facebook:AppId"];
+            //   Options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+            //}).AddCookie();
 
             //// Google Authentication
            // services.AddAuthentication(Options =>

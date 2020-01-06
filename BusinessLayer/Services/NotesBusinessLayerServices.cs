@@ -405,5 +405,12 @@ namespace BusinessLayer.Services
                 throw new Exception(ex.Message);
             }
         }
+
+
+        public IList<NotesModel> Sorting( int UserId)
+        {
+            var result = this.notesRepositoryLayer.Sorting(UserId);
+            return result;
+        }
     }
 }

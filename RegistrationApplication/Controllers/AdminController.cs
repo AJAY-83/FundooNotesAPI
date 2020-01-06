@@ -88,6 +88,7 @@ namespace FundooNotesAPI.Controllers
                     return Ok(new { result });
                 }
                 else
+
                 {
                     return BadRequest(new { result });
                 }
@@ -97,6 +98,28 @@ namespace FundooNotesAPI.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> AdminLogin(AdminLogin adminModel)
+        {
+            try
+            {
+                var result = await this.adminBusinessLayer.AdminLogin(adminModel);
+
+                if (result == true)
+                {
+                    return Ok(new{result });
+                }
+                else {
+                    return BadRequest(new { result });
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        
 
         }
     }

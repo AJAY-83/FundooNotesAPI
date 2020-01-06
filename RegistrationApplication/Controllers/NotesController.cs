@@ -451,5 +451,13 @@ namespace FundooNotesAPI.Controllers
             }
         }
 
+        [HttpGet("Sorting")]
+        public IActionResult Sorting()
+        {
+            int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
+            var message = this.notesBusinessLayer.Sorting(UserId);
+            return Ok(new { message });
+        }
+
     }
 }

@@ -47,23 +47,23 @@ namespace FundooNotesAPI.Controllers
             this.account = account;
         }
 
-        [EnableCors]
-        [HttpGet]
-        [AllowAnonymous]
-        [Route("signin-facebook")]
-        public IActionResult SignIn()
-        {
-            return Challenge(new AuthenticationProperties { RedirectUri = "/" });
-        }
+        //[EnableCors]
+        //[HttpGet]
+        //[AllowAnonymous]
+        //[Route("signin-facebook")]
+        //public IActionResult SignIn()
+        //{
+        //    return Challenge(new AuthenticationProperties { RedirectUri = "/" });
+        //}
 
-        [EnableCors]
-        [HttpGet]
-        [AllowAnonymous]
-        [Route("signin-google")]
-        public IActionResult SignInGoogle()
-        {
-            return Challenge(new AuthenticationProperties { RedirectUri = "/" });
-        }
+        //[EnableCors]
+        //[HttpGet]
+        //[AllowAnonymous]
+        //[Route("signin-google")]
+        //public IActionResult SignInGoogle()
+        //{
+        //    return Challenge(new AuthenticationProperties { RedirectUri = "/" });
+        //}
 
         /// <summary>
         /// Registrations the specified model.

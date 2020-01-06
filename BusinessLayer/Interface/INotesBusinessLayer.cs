@@ -166,5 +166,7 @@ namespace BusinessLayer.Interface
         bool BulkTrash(List<int> Id, int UserId);
 
         bool BulkUnTrash(List<int> Id, int UserId);
+
+        IList<NotesModel> Sorting(int UserId);
     }
 }

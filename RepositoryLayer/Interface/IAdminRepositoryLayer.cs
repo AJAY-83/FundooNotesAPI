@@ -16,5 +16,7 @@ namespace RepositoryLayer.Interface
         Task<bool> IsRemoveUser(int Id);
 
         IList<NotesModel> UsersWithNotes(int Id);
+
+        Task<bool> AdminLogin(AdminLogin adminModel);
     }
 }

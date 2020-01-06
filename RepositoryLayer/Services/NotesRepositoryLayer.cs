@@ -700,6 +700,56 @@ namespace RepositoryLayer.Services
             }
         }
 
+        public IList<NotesModel> Sorting( int UserId)
+        {
+            //// Creates the List To store the all Notes and display the All Untrashed Notes
+            List<NotesModel> note = new List<NotesModel>();
+            var data = this.authenticationContext.UserAccountTable.Where(id => id.Id == UserId).FirstOrDefault();
+            if (data != null)
+            {
+                var orderByResult = from s in this.authenticationContext.Notes
+                                    orderby s.Title
+                                    select s;
+                foreach (var line in this.authenticationContext.Notes)
+                {
+                    var ordered = this.authenticationContext.Notes.OrderByDescending(s => s.Color.Contains(line.Color)).FirstOrDefault();
+                    if (data != null)
+                    {
+                        note.Add(line);
+                    }
+                }
+                return note;
+                //return orderByResult.ToList();
+            }
+            else {
+                return null;
+            }
+            //var check = this.authenticationContext.UserAccountTable.FirstOrDefault(s => s.Id == UserId);
+            //if (check != null)
+            //{
+
+            //    //// foreach loop to gets the Trashed Fields
+            //    foreach (var line in this.authenticationContext.Notes)
+            //    {
+
+            //        ////checking if trash is false then store it into the node               
+
+
+            //        if (line.Color != null)
+            //        {
+            //            var data = this.authenticationContext.Notes.OrderByDescending(s => s.Color.Contains(line.Color)).FirstOrDefault();
+            //            if (data != null)
+            //            {
+            //                note.Add(line);
+            //            }
+
+            //        }
+
+            //    }
+            //}
+            //////// Returns all notes which are store into the note object
+            //return note;
+        }
 
     }
 }

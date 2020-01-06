@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RepositoryLayer.Services
 {
-   public class AdminRepositoryLayer:IAdminRepositoryLayer
+    public class AdminRepositoryLayer : IAdminRepositoryLayer
     {
         private readonly AuthenticationContext authentication;
         public AdminRepositoryLayer(AuthenticationContext authentication)
@@ -28,9 +28,14 @@ namespace RepositoryLayer.Services
                     MobileNumber = accountModel.MobileNumber,
                     Email = accountModel.Email,
                     Password = accountModel.Password,
-                    TypeOfUser = accountModel.TypeOfUser                  
+                    TypeOfUser = accountModel.TypeOfUser
                 };
 
+                var emailchecking = this.authentication.UserAccountTable.Where(data => data.Email == accountModel.Email).FirstOrDefault();
+                if (emailchecking == null)
+                {
+                    return false;
+                }
                 //// checking the email id is already exists 
                 //// if exist he doen't register
                 bool UsernameExists = authentication.UserAccountTable.Any(x => x.Email == accountModel.Email);
@@ -54,6 +59,26 @@ namespace RepositoryLayer.Services
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> AdminLogin(AdminLogin adminModel)
+        {
+            var data =   this.authentication.UserAccountTable.Where(table => table.Email == adminModel.Email && table.Password==adminModel.Password).SingleOrDefault();
+
+            if (data != null)
+            {
+                if (data.TypeOfUser == "Admin" || data.TypeOfUser == "admin")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else {
+                return false;
             }
         }
 
@@ -125,6 +150,7 @@ namespace RepositoryLayer.Services
         {
             List<NotesModel> users = new List<NotesModel>();
 
+             
             foreach (var line in this.authentication.UserAccountTable)
             {
                 if (line.Id==Id)

@@ -18,5 +18,6 @@ namespace BusinessLayer.Interface
 
         IList<NotesModel> UsersWithNotes(int Id);
 
+        Task<bool> AdminLogin(AdminLogin adminModel);
     }
 }

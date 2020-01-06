@@ -61,5 +61,11 @@ namespace BusinessLayer.Services
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<bool> AdminLogin(AdminLogin adminModel)
+        {
+            var result =await this.adminRepositoryLayer.AdminLogin(adminModel);
+            return result;
+        }
     }
 }
