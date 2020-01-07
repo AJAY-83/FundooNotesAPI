@@ -1,12 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using BusinessLayer.Interface;
 using CommonLayer.Model;
+using CommonLayer.Request;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using RepositoryLayer.Context;
 
 namespace FundooNotesAPI.Controllers
 {
@@ -15,13 +22,26 @@ namespace FundooNotesAPI.Controllers
   
     public class AdminController : ControllerBase
     {
+        private readonly AuthenticationContext authentication;
+
+        private readonly IConfiguration configuration;
+
+
         private readonly IAdminBusinessLayer adminBusinessLayer;
-        public AdminController(IAdminBusinessLayer adminBusinessLayer)
+        public AdminController(IAdminBusinessLayer adminBusinessLayer, AuthenticationContext authenticationContext, IConfiguration configuration)
         {
             this.adminBusinessLayer = adminBusinessLayer;
+            this.configuration = configuration;
+            this.configuration = configuration;
         }
+        /// <summary>
+        /// The status is use to show the status of the user that is true or false
+        /// </summary>
         string status = "";
 
+        /// <summary>
+        /// The message show the user proper message for 
+        /// </summary>
         string message = "";
         [HttpPost("Admin")]
         public async Task<IActionResult> AdminRegistration(AccountModel accountModel)
@@ -40,6 +60,10 @@ namespace FundooNotesAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Displays the basic user.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("BasicUsers")]
         public IActionResult DisplayBasicUser()
         {
@@ -54,6 +78,12 @@ namespace FundooNotesAPI.Controllers
             return Ok(new { result });
         }
 
+        /// <summary>
+        /// Removes the user.
+        /// </summary>
+        /// <param name="Id">The identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         [HttpDelete]
         [Route("delete")]
         public async Task<IActionResult> RemoveUser(int Id)
@@ -76,8 +106,14 @@ namespace FundooNotesAPI.Controllers
             }           
         }
 
-        [HttpGet]
-        [Route("GetUserByNotes")]
+        /// <summary>
+        /// Gets the user by notes.
+        /// </summary>
+        /// <param name="Id">The identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        [HttpGet("User/{Id}/Notes")]
+       
         public IActionResult GetUserByNotes(int Id)
         {
             try
@@ -99,19 +135,30 @@ namespace FundooNotesAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Admins the login.
+        /// </summary>
+        /// <param name="adminModel">The admin model.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         [HttpPost("Login")]
         public async Task<IActionResult> AdminLogin(AdminLogin adminModel)
         {
             try
             {
-                var result = await this.adminBusinessLayer.AdminLogin(adminModel);
-
-                if (result == true)
+               
+                var data = await this.adminBusinessLayer.AdminLogin(adminModel);
+               string token = LoginToken(adminModel);
+                if (data != null)
                 {
-                    return Ok(new{result });
+                    status = "True";
+                    message = "Admin has been login";
+                    return Ok(new {status,message, data });
                 }
                 else {
-                    return BadRequest(new { result });
+                    status = "False";
+                    message = "Admin Not Login";
+                    return BadRequest(new { status ,message});
                 }
             }
             catch (Exception ex)
@@ -119,7 +166,56 @@ namespace FundooNotesAPI.Controllers
                 throw new Exception(ex.Message);
             }
         }
-        
+
+        [HttpPost]
+        [Route("")]
+        public string LoginToken(AdminLogin adminLogin)
+        {
+            var data = this.authentication.UserAccountTable.Where(table => table.Email == adminLogin.Email && table.Password == adminLogin.Password).SingleOrDefault();
+            var row = authentication.UserAccountTable.Where(u => u.Email == adminLogin.Email).FirstOrDefault();
+            bool IsValidUser = authentication.UserAccountTable.Any(x => x.Email == adminLogin.Email && x.Password == adminLogin.Password);
+            if (data != null)
+            {
+                if (data.TypeOfUser == "Admin" || data.TypeOfUser == "admin")
+                {
+                    if (IsValidUser)
+                    {
+                        var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["SecretKey:Key"]));
+
+                        var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+
+                        var claims = new List<Claim>
+                     {
+                      new Claim("Id",row.Id.ToString()),
+                      new Claim("Email", adminLogin.Email),
+                      new Claim(ClaimTypes.Role, "Admin")
+                      };
+
+                        var tokeOptions = new JwtSecurityToken(
+                           claims: claims,
+                           expires: DateTime.Now.AddDays(1),
+                           signingCredentials: signinCredentials
+                       );
+
+                        var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+                        return tokenString;
+                    }
+                    else
+                    {
+                        return "Token Not Generated";
+                    }
+                }
+                else
+                {
+                    return "Email or Password is wrong";
+                }
+            }
+            else
+            {
+                return "Email or Password is wrong";
+            }
 
         }
+
     }
+}

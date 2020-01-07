@@ -1,4 +1,5 @@
 ﻿using CommonLayer.Model;
+using CommonLayer.Request;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,6 +18,6 @@ namespace RepositoryLayer.Interface
 
         IList<NotesModel> UsersWithNotes(int Id);
 
-        Task<bool> AdminLogin(AdminLogin adminModel);
+        Task<AdminLoginRequest> AdminLogin(AdminLogin adminModel);
     }
 }

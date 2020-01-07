@@ -1,9 +1,14 @@
 ﻿using CommonLayer.Model;
+using CommonLayer.Request;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using RepositoryLayer.Context;
 using RepositoryLayer.Interface;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,11 +16,29 @@ namespace RepositoryLayer.Services
 {
     public class AdminRepositoryLayer : IAdminRepositoryLayer
     {
+        /// <summary>
+        /// The authentication
+        /// </summary>
         private readonly AuthenticationContext authentication;
-        public AdminRepositoryLayer(AuthenticationContext authentication)
+
+        private readonly IConfiguration configuraion;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdminRepositoryLayer"/> class.
+        /// </summary>
+        /// <param name="authentication">The authentication.</param>
+        public AdminRepositoryLayer(AuthenticationContext authentication, IConfiguration configuraion)
         {
             this.authentication = authentication;
+            this.configuraion = configuraion;
         }
+
+        /// <summary>
+        /// Determines whether [is admin register] [the specified account model].
+        /// </summary>
+        /// <param name="accountModel">The account model.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<bool> IsAdminRegister(AccountModel accountModel)
         {
 
@@ -28,7 +51,7 @@ namespace RepositoryLayer.Services
                     MobileNumber = accountModel.MobileNumber,
                     Email = accountModel.Email,
                     Password = accountModel.Password,
-                    TypeOfUser = accountModel.TypeOfUser
+                    TypeOfUser = "Admin"
                 };
 
                 var emailchecking = this.authentication.UserAccountTable.Where(data => data.Email == accountModel.Email).FirstOrDefault();
@@ -62,24 +85,52 @@ namespace RepositoryLayer.Services
             }
         }
 
-        public async Task<bool> AdminLogin(AdminLogin adminModel)
+        /// <summary>
+        /// Admins the login.
+        /// </summary>
+        /// <param name="adminModel">The admin model.</param>
+        /// <returns></returns>
+        public async Task<AdminLoginRequest> AdminLogin(AdminLogin adminModel )
         {
-            var data =   this.authentication.UserAccountTable.Where(table => table.Email == adminModel.Email && table.Password==adminModel.Password).SingleOrDefault();
+           
+                AdminLoginRequest adminLoginRequest = new AdminLoginRequest();
+                var data = this.authentication.UserAccountTable.Where(table => table.Email == adminModel.Email && table.Password == adminModel.Password).SingleOrDefault();
+                var row = authentication.UserAccountTable.Where(u => u.Email == adminModel.Email).FirstOrDefault();
 
-            if (data != null)
-            {
-                if (data.TypeOfUser == "Admin" || data.TypeOfUser == "admin")
+                if (data != null)
                 {
-                    return true;
+                    if (data.TypeOfUser == "Admin" || data.TypeOfUser == "admin")
+                    {
+
+                        //var users = new NotesModel()
+                        //{
+                        //    Title = noteAddRequest.Title,
+                        //    Content = noteAddRequest.Content,
+                        //    UserId = UserId,
+                        //    CreatedDate = DateTime.Now,
+                        //    ModifiedDate = DateTime.Now,
+                        //    Color = noteAddRequest.Color,
+                        //    Reminder = null,
+                        //    IsActive = false,
+                        //    IsTrash = false,
+                        //    IsPin = false,
+                        //    IsArchive = false,
+                        //    IsNotes = false
+                        //};
+
+                        var response = new AdminLoginRequest()
+                        {
+                            Id = data.Id,
+                            FullName = data.FirstName,
+                            Email = data.Email,
+
+
+                        };
+                        return response;
+                    }
                 }
-                else
-                {
-                    return false;
-                }
-            }
-            else {
-                return false;
-            }
+            
+            return null;
         }
 
         /// <summary>
@@ -100,6 +151,10 @@ namespace RepositoryLayer.Services
             return users;
         }
 
+        /// <summary>
+        /// Advances the users.
+        /// </summary>
+        /// <returns></returns>
         public IList<AccountModel> AdvanceUsers()
         {
             List<AccountModel> users = new List<AccountModel>();
@@ -114,6 +169,12 @@ namespace RepositoryLayer.Services
             return users;
         }
 
+        /// <summary>
+        /// Determines whether [is remove user] [the specified user identifier].
+        /// </summary>
+        /// <param name="UserId">The user identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<bool> IsRemoveUser(int UserId)
         {
        try { 
@@ -145,7 +206,11 @@ namespace RepositoryLayer.Services
             }
         }
 
-
+        /// <summary>
+        /// Userses the with notes.
+        /// </summary>
+        /// <param name="Id">The identifier.</param>
+        /// <returns></returns>
         public IList<NotesModel> UsersWithNotes(int Id)
         {
             List<NotesModel> users = new List<NotesModel>();

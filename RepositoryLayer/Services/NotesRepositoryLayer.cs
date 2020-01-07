@@ -599,7 +599,14 @@ namespace RepositoryLayer.Services
                 return false;
             }            
         }
-     
+
+        /// <summary>
+        /// Bulks the trash.
+        /// </summary>
+        /// <param name="NotesId">The notes identifier.</param>
+        /// <param name="UserId">The user identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public bool BulkTrash(List<int> NotesId, int UserId)
         {
 
@@ -624,19 +631,9 @@ namespace RepositoryLayer.Services
                             {
                                 data.IsTrash = true;
                                 data.ModifiedDate = DateTime.Now;
-                            }
-                           
-                            //else
-                            //{
-                            //    //// if IsTrash is false then make it true
-                            //    //// means trash the Note and save into Database
-                            //    data.IsTrash = true;
-                            //    data.ModifiedDate = DateTime.Now;
-                            //}
-                                                
+                            }                            
                         }
-                        //var result = authenticationContext.Notes.Add(data);
-                       
+                      
                     }
                     this.authenticationContext.SaveChanges();
                 }
@@ -648,7 +645,13 @@ namespace RepositoryLayer.Services
             }           
         }
 
-
+        /// <summary>
+        /// Bulks the un trash.
+        /// </summary>
+        /// <param name="NotesId">The notes identifier.</param>
+        /// <param name="UserId">The user identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public bool BulkUnTrash( List<int> NotesId,int UserId)
         {
 
@@ -676,21 +679,11 @@ namespace RepositoryLayer.Services
                             }
                             else {
                                 return false;
-                            }
-                            //else
-                            //{
-                            //    //// if IsTrash is false then make it true
-                            //    //// means trash the Note and save into Database
-                            //    data.IsTrash = true;
-                            //    data.ModifiedDate = DateTime.Now;
-                            //}
-                        }
-                        //var result = authenticationContext.Notes.Add(data);
-                        
-                       
+                            }                            
+                        }                                                                      
                     }
-                    this.authenticationContext.SaveChanges();
 
+                    this.authenticationContext.SaveChanges();
                 }
                 return true;
             }            
@@ -705,50 +698,16 @@ namespace RepositoryLayer.Services
             //// Creates the List To store the all Notes and display the All Untrashed Notes
             List<NotesModel> note = new List<NotesModel>();
             var data = this.authenticationContext.UserAccountTable.Where(id => id.Id == UserId).FirstOrDefault();
-            if (data != null)
-            {
-                var orderByResult = from s in this.authenticationContext.Notes
-                                    orderby s.Title
-                                    select s;
-                foreach (var line in this.authenticationContext.Notes)
-                {
-                    var ordered = this.authenticationContext.Notes.OrderByDescending(s => s.Color.Contains(line.Color)).FirstOrDefault();
-                    if (data != null)
-                    {
-                        note.Add(line);
-                    }
-                }
-                return note;
-                //return orderByResult.ToList();
+            if(data != null)
+            { 
+            List<NotesModel> sortedUsers = this.authenticationContext.Notes.OrderBy(user => user.Title).ToList();
+               
+             //// this.authenticationContext.Notes.OrderBy(user => user.Content) .ThenByDescending(user => user.Title).ToList()
+                return sortedUsers;                           
             }
             else {
                 return null;
-            }
-            //var check = this.authenticationContext.UserAccountTable.FirstOrDefault(s => s.Id == UserId);
-            //if (check != null)
-            //{
-
-            //    //// foreach loop to gets the Trashed Fields
-            //    foreach (var line in this.authenticationContext.Notes)
-            //    {
-
-            //        ////checking if trash is false then store it into the node               
-
-
-            //        if (line.Color != null)
-            //        {
-            //            var data = this.authenticationContext.Notes.OrderByDescending(s => s.Color.Contains(line.Color)).FirstOrDefault();
-            //            if (data != null)
-            //            {
-            //                note.Add(line);
-            //            }
-
-            //        }
-
-            //    }
-            //}
-            //////// Returns all notes which are store into the note object
-            //return note;
+            }            
         }
 
     }
