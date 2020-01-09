@@ -192,18 +192,20 @@ namespace RepositoryLayer.Services
                 
             foreach (var Id in this.authentication.UserAccountTable)
             {
-                var data =   this.authentication.UserAccountTable.Where(u => u.Id == UserId ).FirstOrDefault();
+                var data =    this.authentication.UserAccountTable.Where(u => u.Id == UserId ).FirstOrDefault();
                 if (data != null)
                 {
-                   var result=  this.authentication.UserAccountTable.Remove(data);
-                   await this.authentication.SaveChangesAsync();
-                    if (result != null)
-                    {
-                        return true;
-                    }
-                    {
-                        return false;
-                    }
+                       var result =  this.authentication.UserAccountTable.Remove(data);
+                        await this.authentication.SaveChangesAsync();
+                        if (result != null)
+                        {
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    
+                     
                 }
                 else {
                     return false;
