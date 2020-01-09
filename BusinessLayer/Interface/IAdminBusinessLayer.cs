@@ -26,7 +26,7 @@ namespace BusinessLayer.Interface
         /// Advances the users.
         /// </summary>
         /// <returns></returns>
-        IList<AccountModel> AdvanceUsers();
+        Dictionary<string, int> AdvanceUsers();
 
         /// <summary>
         /// Removes the user.
@@ -48,5 +48,12 @@ namespace BusinessLayer.Interface
         /// <param name="adminModel">The admin model.</param>
         /// <returns></returns>
         Task<AdminLoginRequest> AdminLogin(AdminLogin adminModel);
+
+        /// <summary>
+        /// Checks the asynchronous.
+        /// </summary>
+        /// <param name="typeOfUser">The type of user.</param>
+        /// <returns></returns>
+        Task<IList<AccountModel>> checkAsync(List<String> typeOfUser);
     }
 }

@@ -157,16 +157,26 @@ namespace BusinessLayer.Interface
         Task<bool> RemoveCollabrator(int Id, int UserId);
 
         /// <summary>
-        /// Userses this instance.
+        /// Bulks the trash.
         /// </summary>
+        /// <param name="Id">The identifier.</param>
+        /// <param name="UserId">The user identifier.</param>
         /// <returns></returns>
-  
-
-
         bool BulkTrash(List<int> Id, int UserId);
 
+        /// <summary>
+        /// Bulks the un trash.
+        /// </summary>
+        /// <param name="Id">The identifier.</param>
+        /// <param name="UserId">The user identifier.</param>
+        /// <returns></returns>
         bool BulkUnTrash(List<int> Id, int UserId);
 
+        /// <summary>
+        /// Sortings the specified user identifier.
+        /// </summary>
+        /// <param name="UserId">The user identifier.</param>
+        /// <returns></returns>
         IList<NotesModel> Sorting(int UserId);
     }
 }

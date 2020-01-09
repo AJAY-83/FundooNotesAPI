@@ -91,6 +91,7 @@ namespace RepositoryLayer.Services
         /// <param name="adminModel">The admin model.</param>
         /// <returns></returns>
         public async Task<AdminLoginRequest> AdminLogin(AdminLogin adminModel )
+
         {
            
                 AdminLoginRequest adminLoginRequest = new AdminLoginRequest();
@@ -122,8 +123,8 @@ namespace RepositoryLayer.Services
                         {
                             Id = data.Id,
                             FullName = data.FirstName,
-                            Email = data.Email,
-
+                            Email = data.Email
+                          
 
                         };
                         return response;
@@ -143,7 +144,7 @@ namespace RepositoryLayer.Services
 
             foreach (var line in this.authentication.UserAccountTable)
             {
-                if (line.TypeOfUser == "basic" || line.TypeOfUser == "Basic")
+                if (line.TypeOfUser == "basic" || line.TypeOfUser == "Basic" || line.TypeOfUser=="Advance"||line.TypeOfUser=="advance")
                 {
                     users.Add(line);
                 }
@@ -155,18 +156,28 @@ namespace RepositoryLayer.Services
         /// Advances the users.
         /// </summary>
         /// <returns></returns>
-        public IList<AccountModel> AdvanceUsers()
+        public Dictionary<string,int> AdvanceUsers()
         {
+            int basic=0;
+            int advance=0;
+            Dictionary<string, int> map = new Dictionary<string, int>();
             List<AccountModel> users = new List<AccountModel>();
 
             foreach (var line in this.authentication.UserAccountTable)
             {
                 if (line.TypeOfUser == "advance" || line.TypeOfUser == "Advance")
                 {
-                    users.Add(line);
+                    advance++;
+                }
+                else if (line.TypeOfUser == "basic" || line.TypeOfUser=="Basic")
+                {
+                    basic++;
+                    
                 }
             }
-            return users;
+            map.Add("Basic", basic);
+            map.Add("Advance", advance);
+            return map;
         }
 
         /// <summary>
@@ -232,5 +243,49 @@ namespace RepositoryLayer.Services
             }
             return users;
         }
+
+        /// <summary>
+        /// Checks the asynchronous.
+        /// </summary>
+        /// <param name="typeOfUser">The type of user.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<IList<AccountModel>> checkAsync(List<String> typeOfUser)
+        {
+            // var result = string.Join(",", typeOfUser.ToArray());
+            string data =  string.Join(" ", typeOfUser);
+
+            List<AccountModel> note = new List<AccountModel>();
+            //// foreach loop to gets the Trashed Fields
+
+            try
+            {
+                
+                    foreach (var users in this.authentication.UserAccountTable)
+                    {
+                    //// if user clicks on Button without enter any data into textfield it will show all users
+                    if (data == null || data==string.Empty)
+                    {
+                        //// checks the Basic as well as basic
+                        if (users.TypeOfUser == "Basic" || users.TypeOfUser == "basic" || users.TypeOfUser == "Advance" || users.TypeOfUser == "advance")
+                        {
+                            note.Add(users);
+                        }
+                    }
+                    //// if admin want spacific users like Basic or Advance
+                    if (users.TypeOfUser == data)
+                    {
+                        note.Add(users);
+                    }
+                                        
+                }
+                return note;                                                   
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }

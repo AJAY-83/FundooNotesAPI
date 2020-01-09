@@ -18,8 +18,7 @@ using RepositoryLayer.Context;
 namespace FundooNotesAPI.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-  
+    [ApiController]  
     public class AdminController : ControllerBase
     {
         private readonly AuthenticationContext authentication;
@@ -43,7 +42,13 @@ namespace FundooNotesAPI.Controllers
         /// The message show the user proper message for 
         /// </summary>
         string message = "";
-        [HttpPost("Admin")]
+
+        /// <summary>
+        /// this API for the Admin Registration
+        /// </summary>
+        /// <param name="accountModel"></param>
+        /// <returns>smd for data related to the admin</returns>
+        [HttpPost]
         public async Task<IActionResult> AdminRegistration(AccountModel accountModel)
         {
             var data = await this.adminBusinessLayer.AdminRegistration(accountModel);
@@ -63,16 +68,20 @@ namespace FundooNotesAPI.Controllers
         /// <summary>
         /// Displays the basic user.
         /// </summary>
-        /// <returns></returns>
-        [HttpGet("BasicUsers")]
-        public IActionResult DisplayBasicUser()
+        /// <returns>userlist</returns>
+        [HttpGet("UserList")]
+        public IActionResult UserList()
         {
             var result = this.adminBusinessLayer.Users();
             return Ok(new { result });
         }
 
-        [HttpGet("AdvanceUsers")]
-        public IActionResult DisplayAdvanceUser()
+        /// <summary>
+        /// this api give the all users
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("CountAllUsers")]
+        public IActionResult AllUsers()
         {
             var result = this.adminBusinessLayer.AdvanceUsers();
             return Ok(new { result });
@@ -84,8 +93,7 @@ namespace FundooNotesAPI.Controllers
         /// <param name="Id">The identifier.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        [HttpDelete]
-        [Route("delete")]
+        [HttpDelete("{Id}")]
         public async Task<IActionResult> RemoveUser(int Id)
         {
             try
@@ -110,7 +118,7 @@ namespace FundooNotesAPI.Controllers
         /// Gets the user by notes.
         /// </summary>
         /// <param name="Id">The identifier.</param>
-        /// <returns></returns>
+        /// <returns>id</returns>
         /// <exception cref="Exception"></exception>
         [HttpGet("User/{Id}/Notes")]
        
@@ -118,15 +126,15 @@ namespace FundooNotesAPI.Controllers
         {
             try
             {
-                var result =  this.adminBusinessLayer.UsersWithNotes(Id);
-                if (result != null)
+                var data =  this.adminBusinessLayer.UsersWithNotes(Id);
+                if (data != null)
                 {
-                    return Ok(new { result });
+                    return Ok(new { data });
                 }
                 else
 
                 {
-                    return BadRequest(new { result });
+                    return BadRequest(new { data });
                 }
             }
             catch (Exception ex)
@@ -142,13 +150,13 @@ namespace FundooNotesAPI.Controllers
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         [HttpPost("Login")]
-        public async Task<IActionResult> AdminLogin(AdminLogin adminModel)
+        public async Task<IActionResult> AdminLogin(AdminLogin adminLogin)
         {
             try
             {
-               
-                var data = await this.adminBusinessLayer.AdminLogin(adminModel);
-               string token = LoginToken(adminModel);
+            
+                var data = await this.adminBusinessLayer.AdminLogin(adminLogin);
+               var token=await LoginToken(adminLogin);
                 if (data != null)
                 {
                     status = "True";
@@ -167,47 +175,66 @@ namespace FundooNotesAPI.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("")]
-        public string LoginToken(AdminLogin adminLogin)
+        /// <summary>
+        /// generate the Token for the Admin login
+        /// </summary>
+        /// <param name="adminLogin"></param>
+        /// <returns></returns>
+       
+        /// <summary>
+        /// this is for the user list
+        /// </summary>
+        /// <param name="usertype"></param>
+        /// <returns></returns>
+        [HttpGet("AllUsersList")]
+        public async Task<IActionResult> checklist(List<string> usertype)
         {
-            var data = this.authentication.UserAccountTable.Where(table => table.Email == adminLogin.Email && table.Password == adminLogin.Password).SingleOrDefault();
-            var row = authentication.UserAccountTable.Where(u => u.Email == adminLogin.Email).FirstOrDefault();
-            bool IsValidUser = authentication.UserAccountTable.Any(x => x.Email == adminLogin.Email && x.Password == adminLogin.Password);
+            var data = await this.adminBusinessLayer.checkAsync(usertype);
             if (data != null)
             {
-                if (data.TypeOfUser == "Admin" || data.TypeOfUser == "admin")
+                return Ok(new { data });
+            }
+            else
+            {
+                message = "Not Displaying Records";
+                return BadRequest(new { message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<string> LoginToken(AdminLogin adminLogin)
+        {
+            // var data =  this.authentication.UserAccountTable.Where(table => table.Email == adminLogin.Email && table.Password == adminLogin.Password).SingleOrDefault();
+            var row = authentication.UserAccountTable.Where(u => u.Email == adminLogin.Email).FirstOrDefault();
+            bool IsValidUser = authentication.UserAccountTable.Any(x => x.Email == adminLogin.Email && x.Password == adminLogin.Password);
+            if (row != null)
+            {
+
+                if (IsValidUser)
                 {
-                    if (IsValidUser)
-                    {
-                        var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["SecretKey:Key"]));
+                    var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["SecretKey:Key"]));
 
-                        var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+                    var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
-                        var claims = new List<Claim>
+                    var claims = new List<Claim>
                      {
                       new Claim("Id",row.Id.ToString()),
                       new Claim("Email", adminLogin.Email),
                       new Claim(ClaimTypes.Role, "Admin")
                       };
 
-                        var tokeOptions = new JwtSecurityToken(
-                           claims: claims,
-                           expires: DateTime.Now.AddDays(1),
-                           signingCredentials: signinCredentials
-                       );
+                    var tokeOptions = new JwtSecurityToken(
+                       claims: claims,
+                       expires: DateTime.Now.AddDays(1),
+                       signingCredentials: signinCredentials
+                   );
 
-                        var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
-                        return tokenString;
-                    }
-                    else
-                    {
-                        return "Token Not Generated";
-                    }
+                    var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+                    return tokenString;
                 }
                 else
                 {
-                    return "Email or Password is wrong";
+                    return "Token Not Generated";
                 }
             }
             else

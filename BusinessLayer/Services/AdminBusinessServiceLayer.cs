@@ -50,7 +50,7 @@ namespace BusinessLayer.Services
         /// Advances the users.
         /// </summary>
         /// <returns></returns>
-        public IList<AccountModel> AdvanceUsers()
+        public Dictionary<string, int> AdvanceUsers()
         {
             var result = this.adminRepositoryLayer.AdvanceUsers();
             return result;
@@ -107,6 +107,17 @@ namespace BusinessLayer.Services
                 var result = await this.adminRepositoryLayer.AdminLogin(adminModel);
                 return result;
            
+        }
+
+        /// <summary>
+        /// Checks the asynchronous.
+        /// </summary>
+        /// <param name="typeOfUser">The type of user.</param>
+        /// <returns>list of users</returns>
+        public async Task<IList<AccountModel>> checkAsync(List<String> typeOfUser)
+        {
+            var result = await this.adminRepositoryLayer.checkAsync(typeOfUser);
+            return result;
         }
     }
 }
