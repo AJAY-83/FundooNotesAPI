@@ -85,11 +85,21 @@ namespace CommonLayer.Model
 
         /// <summary>
         /// Gets or sets the type of user.
+        /// Admin or User.
         /// </summary>
         /// <value>
         /// The type of user.
         /// </value>
         public string  TypeOfUser { get; set; }
+
+        /// <summary>
+        /// Gets or sets the services.
+        /// Basic or Advance User.
+        /// </summary>
+        /// <value>
+        /// The services.
+        /// </value>
+        public string  Services { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is facebook.

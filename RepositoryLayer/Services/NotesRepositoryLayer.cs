@@ -631,7 +631,8 @@ namespace RepositoryLayer.Services
                             {
                                 data.IsTrash = true;
                                 data.ModifiedDate = DateTime.Now;
-                            }                            
+                            }
+                            
                         }
                       
                     }
@@ -665,7 +666,7 @@ namespace RepositoryLayer.Services
                     foreach (var note in this.authenticationContext.Notes)
                     {
                         //// checking the notes Id and UserId is Availabel or not into the databse
-                        var data = this.authenticationContext.Notes.Where(u => u.UserId == UserId).FirstOrDefault();
+                        var data = this.authenticationContext.Notes.Where(u => u.Id == Id && u.UserId == UserId).FirstOrDefault();
 
                         //// checks that is null or  not null
                         if (data != null)
@@ -677,9 +678,7 @@ namespace RepositoryLayer.Services
                                 data.IsTrash = false;
                                 data.ModifiedDate = DateTime.Now;
                             }
-                            else {
-                                return false;
-                            }                            
+                                                  
                         }                                                                      
                     }
 

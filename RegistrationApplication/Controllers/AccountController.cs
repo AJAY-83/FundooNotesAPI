@@ -70,7 +70,7 @@ namespace FundooNotesAPI.Controllers
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns>registration complet</returns>
-        [HttpPost("Registertion")] 
+        [HttpPost("SignUp")] 
         [AllowAnonymous]
         public async Task<IActionResult> Registration( AccountModel data)
         {
@@ -113,6 +113,12 @@ namespace FundooNotesAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Logins the with google.
+        /// </summary>
+        /// <param name="socialLoginModel">The social login model.</param>
+        /// <param name="Url">The URL.</param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> LoginWithGoogle(SocialLoginModel socialLoginModel,string Url)
@@ -200,12 +206,6 @@ namespace FundooNotesAPI.Controllers
                 string message = "Proifle picture not uploaded";
                 return BadRequest(new { status, message });
             }
-        }
-
-        //// start the social login
-        
-
-
-        
+        }       
     }
 }

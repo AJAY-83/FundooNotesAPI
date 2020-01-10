@@ -71,8 +71,8 @@ namespace RepositoryLayer.Services
                     Email = model.Email,
                     Password = model.Password,
                     TypeOfUser = model.TypeOfUser,
-                    IsFacebook = model.IsGoogle,
-                    IsGoogle = model.IsFacebook
+                    Services=model.Services
+                   
                 };
 
                 //// checking the email id is already exists 

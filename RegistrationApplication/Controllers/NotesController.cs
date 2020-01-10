@@ -400,7 +400,7 @@ namespace FundooNotesAPI.Controllers
         }
         
 
-        [HttpPut("{Id}/BulkTrash")]
+        [HttpPut("BulkTrash")]
         public IActionResult Bulktrash(List<int> Id)
         {
             try
@@ -426,7 +426,7 @@ namespace FundooNotesAPI.Controllers
         }
 
 
-        [HttpPut("{Id}/BulkUnTrash")]
+        [HttpPut("BulkUnTrash")]
         public IActionResult BulkUntrash(List<int> Id)
         {
             try

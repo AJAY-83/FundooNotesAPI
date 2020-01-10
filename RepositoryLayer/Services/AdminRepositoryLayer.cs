@@ -144,7 +144,7 @@ namespace RepositoryLayer.Services
 
             foreach (var line in this.authentication.UserAccountTable)
             {
-                if (line.TypeOfUser == "basic" || line.TypeOfUser == "Basic" || line.TypeOfUser=="Advance"||line.TypeOfUser=="advance")
+                if (line.Services == "basic" || line.TypeOfUser == "Basic" || line.TypeOfUser=="Advance"||line.TypeOfUser=="advance")
                 {
                     users.Add(line);
                 }
@@ -165,11 +165,11 @@ namespace RepositoryLayer.Services
 
             foreach (var line in this.authentication.UserAccountTable)
             {
-                if (line.TypeOfUser == "advance" || line.TypeOfUser == "Advance")
+                if (line.Services == "advance" || line.Services == "Advance")
                 {
                     advance++;
                 }
-                else if (line.TypeOfUser == "basic" || line.TypeOfUser=="Basic")
+                else if (line.Services == "basic" || line.Services=="Basic")
                 {
                     basic++;
                     
@@ -203,9 +203,7 @@ namespace RepositoryLayer.Services
                         }
                         else {
                             return false;
-                        }
-                    
-                     
+                        }                                         
                 }
                 else {
                     return false;

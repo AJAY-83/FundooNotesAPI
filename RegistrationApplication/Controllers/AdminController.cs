@@ -49,7 +49,7 @@ namespace FundooNotesAPI.Controllers
         /// </summary>
         /// <param name="accountModel"></param>
         /// <returns>smd for data related to the admin</returns>
-        [HttpPost]
+        [HttpPost("SignUp")]
         [AllowAnonymous]
         public async Task<IActionResult> AdminRegistration(AccountModel accountModel)
         {
@@ -74,11 +74,13 @@ namespace FundooNotesAPI.Controllers
         /// <returns>adminLogin</returns>     
         [HttpPost("Login")]
         [AllowAnonymous]
-        public async Task<IActionResult> AdminLogin(AdminLogin adminLogin)
+        public async Task<IActionResult> AdminLogin([FromForm] AdminLogin adminLogin)
         {
             try
             {
-
+                 //string Type = User.FindFirst(ClaimTypes.Role)?.ValueType;
+              
+                
                 var data = await this.adminBusinessLayer.AdminLogin(adminLogin);
                 string token = LoginToken(adminLogin);
                 if (data != null)
@@ -206,11 +208,12 @@ namespace FundooNotesAPI.Controllers
                 return BadRequest(new { message });
             }
         }
-
-        [HttpGet]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpGet("LoginToken")]
         public string LoginToken(AdminLogin adminLogin)
         {
             try
+
             {
 
                 // var data =  this.authentication.UserAccountTable.Where(table => table.Email == adminLogin.Email && table.Password == adminLogin.Password).SingleOrDefault();
@@ -230,7 +233,7 @@ namespace FundooNotesAPI.Controllers
                      {
                       new Claim("Id",row.Id.ToString()),
                       new Claim("Email", adminLogin.Email),
-                      new Claim(ClaimTypes.Role, "Admin")
+                      new Claim("Admin",ClaimTypes.Role)
                       };
 
                         var tokeOptions = new JwtSecurityToken(
