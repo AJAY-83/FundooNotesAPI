@@ -459,5 +459,13 @@ namespace FundooNotesAPI.Controllers
             return Ok(new { message });
         }
 
+
+        [HttpGet("LabelsOnNote")]
+        public IActionResult LabelsWithNotes()
+        {
+            int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
+            var message = this.notesBusinessLayer.LabelsOnNote(UserId);
+            return Ok(new { message });
+        }
     }
 }

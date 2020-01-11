@@ -36,11 +36,11 @@ namespace BusinessLayer.Services
         /// </summary>
         /// <param name="addlabel">The addlabel.</param>
         /// <returns>Add Labels</returns>        
-        public async Task<bool> AddLabel(LabelModel addLabel)
+        public async Task<bool> AddLabel(LabelModel addLabel,int UserId)
         {
             if (addLabel != null)
             {
-                var result = await this.labelRepositoryLayer.AddLabel(addLabel);
+                var result = await this.labelRepositoryLayer.AddLabel(addLabel,UserId);
                 return result;
             }
             else {
@@ -102,7 +102,7 @@ namespace BusinessLayer.Services
         /// </summary>
         /// <param name="labelModel">The label model.</param>
         /// <returns></returns>
-        public async Task<bool> GetLabel(LabelModel labelModel)
+        public async Task<bool> GetLabel(LabelModel labelModel,int UserId)
         {
             using (var client = new RedisClient())
             {
@@ -110,7 +110,7 @@ namespace BusinessLayer.Services
                 if (client != null)
                 {
                     var getNotes = client.Get(key);
-                    return await this.labelRepositoryLayer.AddLabel(labelModel);
+                    return await this.labelRepositoryLayer.AddLabel(labelModel,UserId);
                 }
                 else
                 {
@@ -118,6 +118,13 @@ namespace BusinessLayer.Services
                     return false;                    
                 }
             }
+
+          
+        }
+        public IList<LabelModel> IsSearched(string input, int UserId)
+        {
+            var result = this.labelRepositoryLayer.IsSearched(input, UserId);
+            return result;
         }
     }
 }

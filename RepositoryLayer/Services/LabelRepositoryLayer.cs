@@ -33,16 +33,16 @@ namespace RepositoryLayer.Services
         /// Added or not
         /// </returns>
         /// <exception cref="Exception"></exception>
-        public async Task<bool> AddLabel(LabelModel addLabel)
+        public async Task<bool> AddLabel(LabelModel addLabel,int UserId)
         {
             try
             {
                 var label = new LabelModel()
                 {
-                    Label = addLabel.Label,
-                    NoteId = addLabel.NoteId,
+                    Label = addLabel.Label,                   
                     Id= addLabel.Id,
-                    UserId= addLabel.UserId,
+                    UserId = UserId,
+                    NoteId=addLabel.NoteId,
                     CreatedDate = DateTime.Now,
                     ModifiedDate = DateTime.Now
 
@@ -126,7 +126,7 @@ namespace RepositoryLayer.Services
         /// <returns>
         /// Display the data
         /// </returns>
-        public IList<LabelModel> Display(int UserId)
+        public  IList<LabelModel> Display(int UserId)
         {
             List<LabelModel> label = new List<LabelModel>();
          
@@ -140,5 +140,25 @@ namespace RepositoryLayer.Services
 
             return label;
         }
-    }
+
+        public IList<LabelModel> IsSearched(string input, int UserId)
+        {
+            //// Creates the List To store the all Notes and display the All Untrashed Notes
+            List<LabelModel> note = new List<LabelModel>();
+            //// foreach loop to gets the Trashed Fields
+            foreach (var line in this.authenticationContext.Label)
+            {
+                //// var data=this.authenticationContext.Notes.Where(s =>  s.Content.Contains(input));
+                ////checking if trash is false then store it into the node 
+                if (line.UserId == UserId)
+                {
+                    if (line.Label.Contains(input) )
+                    {
+                        note.Add(line);
+                    }
+                }
+            }
+            return note;
+           }
+        }
 }

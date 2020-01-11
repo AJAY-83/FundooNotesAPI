@@ -19,7 +19,7 @@ namespace RepositoryLayer.Interface
         /// </summary>
         /// <param name="addlabel">The addlabel.</param>
         /// <returns>Added or not </returns>
-        Task<bool> AddLabel(LabelModel addLabel);
+        Task<bool> AddLabel(LabelModel addLabel, int UserId);
 
         /// <summary>
         /// Updates the label.
@@ -41,5 +41,7 @@ namespace RepositoryLayer.Interface
         /// <param name="Id">The identifier.</param>
         /// <returns>Display the data</returns>
         IList<LabelModel> Display(int UserId);
+
+        IList<LabelModel> IsSearched(string input, int UserId);
     }
 }

@@ -165,5 +165,7 @@ namespace RepositoryLayer.Interface
         bool BulkUnTrash(List<int> Id,int UserId);
 
         IList<NotesModel> Sorting( int UserId);
+
+        List<NoteLabel> LabelsOnNote(int UserId);
     }
 }

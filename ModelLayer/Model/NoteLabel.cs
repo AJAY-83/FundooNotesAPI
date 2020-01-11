@@ -8,55 +8,12 @@ namespace CommonLayer.Model
 {
    public class NoteLabel
     {
-        /// <summary>
-        /// Gets or sets the identifier.
-        /// set the Primary key to Id in NotesLabel Table
-        /// </summary>
-        /// <value>
-        /// The identifier.
-        /// </value>
-        [Key]
+       
         public int Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the label identifier.
-        /// </summary>
-        /// <value>
-        /// The label identifier.
-        /// </value>
-        [ForeignKey("Lable")]
-        [Required(ErrorMessage ="Lable is Important")]
-        public int LabelId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the user identifier.
-        /// makes the foreign to the UserId it is the inside the UserAccountTabele Table in Database
-        /// </summary>
-        /// <value>
-        /// The user identifier.
-        /// </value>
-        [ForeignKey("UserAccountTable")]
-        [Required(ErrorMessage = "User is Important")]
+        public string  Title { get; set; }
+        public string Label { get; set; }
+        public string Content { get; set; }
+        public int NoteId { get; set; }
         public int UserId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the notes identifier.
-        /// makes the foreign key to NotesId it is inside the Notes Table in Databse
-        /// </summary>
-        /// <value>
-        /// The notes identifier.
-        /// </value>
-        [ForeignKey("Notes")]
-        [Required(ErrorMessage = "Notes  is Important")]
-        public int NotesId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the label.
-        /// is the store the label only
-        /// </summary>
-        /// <value>
-        /// The label.
-        /// </value>
-        public string  LabelData { get; set; }
     }
 }

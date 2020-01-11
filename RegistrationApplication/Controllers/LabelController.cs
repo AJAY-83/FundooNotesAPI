@@ -43,20 +43,26 @@ namespace FundooNotesAPI.Controllers
         /// <param name="labelmodel">The labelmodel.</param>
         /// <returns>add label or not</returns>
         [HttpPost]        
-        public async Task<IActionResult> AddLabel([FromForm] LabelModel addLabel)
+        public async Task<IActionResult> AddLabel( LabelModel addLabel)
         {
-            int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
-            addLabel.UserId = UserId;
-            var status = await labelbusinesslayer.AddLabel(addLabel);
-            if (status == true)
-            {                
-                string message = "Label has been added successfully";
-                return Ok(new { status, message,addLabel });
-            }
-            else
+            try
             {
-                string message = "Label not added";
-                return Ok(new { status, message });
+                int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
+                var status = await labelbusinesslayer.AddLabel(addLabel, UserId);
+                if (status == true)
+                {
+                    string message = "Label has been added successfully";
+                    return Ok(new { status, message, addLabel });
+                }
+                else
+                {
+                    string message = "Label not added";
+                    return Ok(new { status, message });
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
 
@@ -66,7 +72,7 @@ namespace FundooNotesAPI.Controllers
         /// <param name="labelModel">The label model.</param>
         /// <returns>update or not updated string</returns>
         [HttpPut]        
-        public async Task<IActionResult> UpdateLabel([FromForm] LabelModel labelModel)
+        public async Task<IActionResult> UpdateLabel(LabelModel labelModel)
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
             labelModel.UserId = UserId;
@@ -111,7 +117,7 @@ namespace FundooNotesAPI.Controllers
         /// <param name="Id">The identifier.</param>
         /// <returns>Display the record</returns>
         [HttpGet]        
-        public IActionResult Display([FromForm] int Id)
+        public IActionResult Display( int Id)
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
             var result = this.labelbusinesslayer.Display(UserId);

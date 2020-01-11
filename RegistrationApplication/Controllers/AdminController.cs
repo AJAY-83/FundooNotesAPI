@@ -158,8 +158,7 @@ namespace FundooNotesAPI.Controllers
         /// <param name="Id">The identifier.</param>
         /// <returns>id</returns>
         /// <exception cref="Exception"></exception>
-        [HttpGet("User/{Id}/Notes")]
-       
+        [HttpGet("User/{Id}/Notes")]       
         public IActionResult GetUserByNotes(int Id)
         {
             try
@@ -181,20 +180,21 @@ namespace FundooNotesAPI.Controllers
             }
         }
 
-       
+
 
         /// <summary>
         /// generate the Token for the Admin login
         /// </summary>
         /// <param name="adminLogin"></param>
         /// <returns></returns>
-       
+
         /// <summary>
         /// this is for the user list
         /// </summary>
         /// <param name="usertype"></param>
         /// <returns></returns>
-        [HttpGet("AllUsersList")]
+        ///  [HttpGey("[action]")]
+        [HttpGet("UsersList/{UserType}")]
         public async Task<IActionResult> checklist(List<string> usertype)
         {
             var data = await this.adminBusinessLayer.checkAsync(usertype);
@@ -208,6 +208,7 @@ namespace FundooNotesAPI.Controllers
                 return BadRequest(new { message });
             }
         }
+
         [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet("LoginToken")]
         public string LoginToken(AdminLogin adminLogin)

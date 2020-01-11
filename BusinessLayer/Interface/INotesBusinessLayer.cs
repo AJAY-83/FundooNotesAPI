@@ -178,5 +178,7 @@ namespace BusinessLayer.Interface
         /// <param name="UserId">The user identifier.</param>
         /// <returns></returns>
         IList<NotesModel> Sorting(int UserId);
+
+        List<NoteLabel> LabelsOnNote(int UserId);
     }
 }

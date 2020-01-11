@@ -267,13 +267,13 @@ namespace RepositoryLayer.Services
                     if (data == null || data==string.Empty)
                     {
                         //// checks the Basic as well as basic
-                        if (users.TypeOfUser == "Basic" || users.TypeOfUser == "basic" || users.TypeOfUser == "Advance" || users.TypeOfUser == "advance")
+                        if (users.Services == "Basic" || users.Services == "basic" || users.Services == "Advance" || users.Services == "advance")
                         {
                             note.Add(users);
                         }
                     }
                     //// if admin want spacific users like Basic or Advance
-                    if (users.TypeOfUser == data)
+                    if (users.Services == data)
                     {
                         note.Add(users);
                     }

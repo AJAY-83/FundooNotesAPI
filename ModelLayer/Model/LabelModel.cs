@@ -24,28 +24,8 @@ namespace CommonLayer.Model
         [Key]
         public int Id { get; set; }
 
-        /// <summary>
-        /// Gets or sets the identifier.
-        /// this is comes from the Notes table
-        /// Notes table Id is Foreign key in the label table
-        /// </summary>
-        /// <value>
-        /// The identifier.
-        /// </value>
-        [Required(ErrorMessage = "Foreign is required")]
-        [ForeignKey("NotesModel")]       
+
         public int NoteId { get; set; }
-        /// <summary>
-        /// Gets or sets the user identifier.
-        /// this key comes from the AccountTable
-        /// there primary key work here as a foreign key
-        /// </summary>
-        /// <value>
-        /// The user identifier.
-        /// </value>
-        [Required(ErrorMessage = "Foreign is required")]
-        [ForeignKey("AccountModel")]       
-        public int UserId { get; set; }
 
         /// <summary>
         /// Gets or sets the label.
@@ -71,5 +51,6 @@ namespace CommonLayer.Model
         /// The modified date.
         /// </value>
         public DateTime ModifiedDate { get; set; }
+        public int UserId { get; set; }
     }
 }

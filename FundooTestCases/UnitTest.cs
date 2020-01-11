@@ -125,23 +125,23 @@ namespace FundooTestCases
         //    Assert.NotNull(data);           
         //}
 
-        [Fact]
-        public void Label()
-        {
-            var Repository = new Mock<ILabelRepositoryLayer>();
-            var businesslayer = new AdminBusinessService(Repository.Object);
+        //[Fact]
+        //public void Label()
+        //{
+        //    var Repository = new Mock<ILabelRepositoryLayer>();
+        //    var businesslayer = new AdminBusinessService(Repository.Object);
 
-            var model = new LabelModel()
-            {
-                NoteId = 4,
-                Id = 2,
-                UserId = 3,
-                Label = "string"
-            };
+        //    var model = new LabelModel()
+        //    {
+        //        NoteId = 4,
+        //        Id = 2,
+        //        UserId = 3,
+        //        Label = "string"
+        //    };
 
-            var data = businesslayer.AddLabel(model);
-            Assert.NotNull(data);
-        }
+        //    var data = businesslayer.AddLabel(model);
+        //    Assert.NotNull(data);
+        //}
         
 
     }

@@ -626,12 +626,17 @@ namespace RepositoryLayer.Services
                         if (data != null)
                         {
                             //// if IsTRash is true make it  false 
-                            /// it means untrashed the Notes and save it into the database
+                            //// it means untrashed the Notes and save it into the database
                             if (data.IsTrash == false)
                             {
                                 data.IsTrash = true;
                                 data.ModifiedDate = DateTime.Now;
                             }
+                            else {
+                                data.IsTrash = false;
+                                data.ModifiedDate = DateTime.Now;
+                            }
+                           
                             
                         }
                       
@@ -707,6 +712,37 @@ namespace RepositoryLayer.Services
             else {
                 return null;
             }            
+        }
+
+
+
+        public List<NoteLabel> LabelsOnNote(int UserId)
+        {
+            try
+            {
+                LabelRepositoryLayer labelRepositoryLayer = new LabelRepositoryLayer(authenticationContext);
+                List<NotesModel> notesdata = DisplayAllNotes(UserId).ToList();
+                List<LabelModel> labeldata = labelRepositoryLayer.Display(UserId).ToList();
+
+                var DBData = (from notes in notesdata
+                              join labels in labeldata
+                              on notes.Id equals labels.NoteId
+                              //join s in supplData on notes.SupplierID equals s.SupplierID
+                              select new NoteLabel()
+                              {
+                                 Id=notes.Id,
+                                  Title=notes.Title,
+                                  Content=notes.Content,
+                                  Label=labels.Label,
+                                  NoteId=labels.NoteId,
+                                  UserId=labels.UserId
+
+
+                              });
+                return DBData.ToList();
+            }
+            catch (Exception) { return null; }
+            finally { }
         }
 
     }

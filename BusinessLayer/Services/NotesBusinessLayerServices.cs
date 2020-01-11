@@ -397,7 +397,7 @@ namespace BusinessLayer.Services
         {
             try
             {
-                var result = this.notesRepositoryLayer.BulkTrash(Id, UserId);
+                var result = this.notesRepositoryLayer.BulkUnTrash(Id, UserId);
                 return result;
             }
             catch (Exception ex)
@@ -410,6 +410,12 @@ namespace BusinessLayer.Services
         public IList<NotesModel> Sorting( int UserId)
         {
             var result = this.notesRepositoryLayer.Sorting(UserId);
+            return result;
+        }
+
+        public List<NoteLabel> LabelsOnNote(int UserId)
+        {
+            var result = this.notesRepositoryLayer.LabelsOnNote(UserId);
             return result;
         }
     }
