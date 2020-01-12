@@ -493,10 +493,10 @@ namespace RepositoryLayer.Services
         /// <param name="UserId"></param>
         /// <param name="noteLabel"></param>
         /// <returns></returns>
-        public string SetLabelsOnNote(int UserId,NoteLabel noteLabel)
-        {
-            return "set labels on note";
-        }
+        //public string SetLabelsOnNote(int UserId,NoteLabel noteLabel)
+        //{
+        //    return "set labels on note";
+        //}
 
         /// <summary>
         /// Determines whether the specified input is searched.
@@ -716,7 +716,7 @@ namespace RepositoryLayer.Services
 
 
 
-        public List<NoteLabel> LabelsOnNote(int UserId)
+        public IList<NoteLabel> LabelsOnNote(int UserId)
         {
             try
             {
@@ -736,13 +736,14 @@ namespace RepositoryLayer.Services
                                   Label=labels.Label,
                                   NoteId=labels.NoteId,
                                   UserId=labels.UserId
-
-
                               });
-                return DBData.ToList();
+                var data= DBData.ToList();
+                return data;
             }
-            catch (Exception) { return null; }
-            finally { }
+            catch (Exception ex) {
+                throw new Exception(ex.Message);
+            }
+          
         }
 
     }

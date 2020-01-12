@@ -130,7 +130,7 @@ namespace BusinessLayer.Interface
         /// </summary>
         /// <param name="noteLabel">The note label.</param>
         /// <returns>Add Label on Note</returns>
-        string LabelsOnNote(int UserId,NoteLabel noteLabel);
+       // string LabelsOnNote(int UserId,NoteLabel noteLabel);
 
         /// <summary>
         /// Searches the specified input.
@@ -179,6 +179,6 @@ namespace BusinessLayer.Interface
         /// <returns></returns>
         IList<NotesModel> Sorting(int UserId);
 
-        List<NoteLabel> LabelsOnNote(int UserId);
+        IList<NoteLabel> LabelsOnNote(int UserId);
     }
 }

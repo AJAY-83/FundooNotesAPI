@@ -123,5 +123,13 @@ namespace FundooNotesAPI.Controllers
             var result = this.labelbusinesslayer.Display(UserId);
             return Ok(new { result ,Id,UserId});
         }
+
+        [HttpGet("Search")]
+        public IActionResult IsSearch(string input)
+        {
+            int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
+            var result = this.labelbusinesslayer.IsSearched(input, UserId);
+            return Ok(new { result });
+        }
     }
 }

@@ -347,13 +347,13 @@ namespace FundooNotesAPI.Controllers
 
         }
 
-        [HttpPost("LabelsOnNote")]
-        public IActionResult SetLabelsOnNote( NoteLabel noteLabel)
-        {
-            int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
-            var message = this.notesBusinessLayer.LabelsOnNote(UserId, noteLabel);
-            return Ok(new { message });
-        }
+        //[HttpPost("LabelsOnNote")]
+        //public IActionResult SetLabelsOnNote( NoteLabel noteLabel)
+        //{
+        //    int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
+        //    var message = this.notesBusinessLayer.LabelsOnNote(UserId, noteLabel);
+        //    return Ok(new { message });
+        //}
 
         [HttpGet("Search")]
         public IActionResult Searching(string input)
@@ -464,8 +464,18 @@ namespace FundooNotesAPI.Controllers
         public IActionResult LabelsWithNotes()
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
-            var message = this.notesBusinessLayer.LabelsOnNote(UserId);
-            return Ok(new { message });
+            var data = this.notesBusinessLayer.LabelsOnNote(UserId);
+            if (data != null)
+            {
+                status = "True";
+                message = "Data Found";
+                return Ok(new {status,message,data });
+            }
+            else {
+                message = "data not found";
+                status = "False";
+                return BadRequest(new { status,message });
+            }
         }
     }
 }

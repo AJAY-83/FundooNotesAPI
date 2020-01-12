@@ -325,19 +325,19 @@ namespace BusinessLayer.Services
             }
         }
 
-        /// <summary>
-        /// Labelses the on note.
-        /// </summary>
-        /// <param name="UserId"></param>
-        /// <param name="noteLabel">The note label.</param>
-        /// <returns>
-        /// Add Label on Note
-        /// </returns>
-        public string LabelsOnNote(int UserId,NoteLabel noteLabel)
-        {
-            var result = this.notesRepositoryLayer.SetLabelsOnNote(UserId,noteLabel);
-            return result;
-        }
+        ///// <summary>
+        ///// Labelses the on note.
+        ///// </summary>
+        ///// <param name="UserId"></param>
+        ///// <param name="noteLabel">The note label.</param>
+        ///// <returns>
+        ///// Add Label on Note
+        ///// </returns>
+        //public string LabelsOnNote(int UserId,NoteLabel noteLabel)
+        //{
+        //    var result = this.notesRepositoryLayer.SetLabelsOnNote(UserId,noteLabel);
+        //    return result;
+        //}
 
         public IList<NotesModel> Search(string input,int UserId)
         {
@@ -413,7 +413,7 @@ namespace BusinessLayer.Services
             return result;
         }
 
-        public List<NoteLabel> LabelsOnNote(int UserId)
+        public IList<NoteLabel> LabelsOnNote(int UserId)
         {
             var result = this.notesRepositoryLayer.LabelsOnNote(UserId);
             return result;

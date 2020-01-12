@@ -133,7 +133,7 @@ namespace RepositoryLayer.Interface
         /// <param name="UserId">The user identifier.</param>
         /// <param name="noteLabel">The note label.</param>
         /// <returns></returns>
-        string SetLabelsOnNote(int UserId,NoteLabel noteLabel);
+       // string SetLabelsOnNote(int UserId,NoteLabel noteLabel);
 
         /// <summary>
         /// Determines whether the specified input is searched.
@@ -166,6 +166,6 @@ namespace RepositoryLayer.Interface
 
         IList<NotesModel> Sorting( int UserId);
 
-        List<NoteLabel> LabelsOnNote(int UserId);
+        IList<NoteLabel> LabelsOnNote(int UserId);
     }
 }
