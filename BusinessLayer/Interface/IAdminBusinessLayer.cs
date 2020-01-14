@@ -54,6 +54,6 @@ namespace BusinessLayer.Interface
         /// </summary>
         /// <param name="typeOfUser">The type of user.</param>
         /// <returns></returns>
-        Task<IList<AccountModel>> checkAsync(List<String> typeOfUser);
+        Task<IList<AccountModel>> checkAsync(string typeOfUser);
     }
 }

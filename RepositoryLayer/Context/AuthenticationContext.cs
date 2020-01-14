@@ -50,6 +50,7 @@ namespace RepositoryLayer.Context
         /// </summary>
         /// <value>
         /// The label.
+        /// 
         /// </value>
         public DbSet<LabelModel> Label { get; set; }
 

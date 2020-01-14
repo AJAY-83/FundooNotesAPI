@@ -250,10 +250,10 @@ namespace RepositoryLayer.Services
         /// <param name="typeOfUser">The type of user.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<IList<AccountModel>> checkAsync(List<String> typeOfUser)
+        public async Task<IList<AccountModel>> checkAsync(string typeOfUser)
         {
             // var result = string.Join(",", typeOfUser.ToArray());
-            string data =  string.Join(" ", typeOfUser);
+            string data =  typeOfUser;
 
             List<AccountModel> note = new List<AccountModel>();
             //// foreach loop to gets the Trashed Fields

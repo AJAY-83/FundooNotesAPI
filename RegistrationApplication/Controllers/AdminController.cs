@@ -107,7 +107,7 @@ namespace FundooNotesAPI.Controllers
         /// Displays the basic user.
         /// </summary>
         /// <returns>userlist</returns>
-        [HttpGet("UserList")]
+        [HttpGet("Users")]
         public IActionResult UserList()
         {
             var result = this.adminBusinessLayer.Users();
@@ -118,7 +118,7 @@ namespace FundooNotesAPI.Controllers
         /// this api give the all users
         /// </summary>
         /// <returns></returns>
-        [HttpGet("CountAllUsers")]
+        [HttpGet("CountUsers")]
         public IActionResult AllUsers()
         {
             var result = this.adminBusinessLayer.AdvanceUsers();
@@ -194,8 +194,9 @@ namespace FundooNotesAPI.Controllers
         /// <param name="usertype"></param>
         /// <returns></returns>
         ///  [HttpGey("[action]")]
-        [HttpGet("UsersList/{UserType}")]
-        public async Task<IActionResult> checklist(List<string> usertype)
+        [HttpGet]
+        [Route("Userslist")]
+        public async Task<IActionResult> Userlist(string usertype)
         {
             var data = await this.adminBusinessLayer.checkAsync(usertype);
             if (data != null)

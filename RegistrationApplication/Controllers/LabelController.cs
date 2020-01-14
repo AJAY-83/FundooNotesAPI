@@ -42,8 +42,8 @@ namespace FundooNotesAPI.Controllers
         /// </summary>
         /// <param name="labelmodel">The labelmodel.</param>
         /// <returns>add label or not</returns>
-        [HttpPost]        
-        public async Task<IActionResult> AddLabel( LabelModel addLabel)
+        [HttpPost]
+        public async Task<IActionResult> AddLabel(LabelModel addLabel)
         {
             try
             {
@@ -71,17 +71,17 @@ namespace FundooNotesAPI.Controllers
         /// </summary>
         /// <param name="labelModel">The label model.</param>
         /// <returns>update or not updated string</returns>
-        [HttpPut]        
+        [HttpPut]
         public async Task<IActionResult> UpdateLabel(LabelModel labelModel)
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
             labelModel.UserId = UserId;
             var status = await labelbusinesslayer.UpdateLabel(labelModel);
-           
+
             if (status != null)
             {
                 string message = "Label has been Updated";
-                return Ok(new { status,message,labelModel });
+                return Ok(new { status, message, labelModel });
             }
             else {
                 string message = "Label is not Updated";
@@ -94,12 +94,12 @@ namespace FundooNotesAPI.Controllers
         /// </summary>
         /// <param name="Id">The identifier.</param>
         /// <returns>delete or not delete string</returns>
-        [HttpDelete]        
+        [HttpDelete]
         public async Task<IActionResult> DeleteLabel(int Id)
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
             var status = await this.labelbusinesslayer.DeleteLabel(Id, UserId);
-            if (status ==true)
+            if (status == true)
             {
                 string messagae = "Lable is deleted successfully";
                 return Ok(new { status, messagae });
@@ -107,7 +107,7 @@ namespace FundooNotesAPI.Controllers
             else
             {
                 string messagae = "Lable is not deleted";
-                return Ok(new { status , messagae });
+                return Ok(new { status, messagae });
             }
         }
 
@@ -116,12 +116,12 @@ namespace FundooNotesAPI.Controllers
         /// </summary>
         /// <param name="Id">The identifier.</param>
         /// <returns>Display the record</returns>
-        [HttpGet]        
-        public IActionResult Display( int Id)
+        [HttpGet]
+        public IActionResult Display(int Id)
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
             var result = this.labelbusinesslayer.Display(UserId);
-            return Ok(new { result ,Id,UserId});
+            return Ok(new { result, Id, UserId });
         }
 
         [HttpGet("Search")]
@@ -130,6 +130,22 @@ namespace FundooNotesAPI.Controllers
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
             var result = this.labelbusinesslayer.IsSearched(input, UserId);
             return Ok(new { result });
+        }
+
+        [HttpPost("List")]
+        public async Task<IActionResult> LabelList(List<string> labels,int NoteId)
+        {
+            try
+            {
+                int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
+
+                var result = await this.labelbusinesslayer.InsertListOFLabels(labels, UserId, NoteId);
+
+                return Ok(new { result });
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

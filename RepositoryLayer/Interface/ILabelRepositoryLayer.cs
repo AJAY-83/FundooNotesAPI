@@ -43,5 +43,8 @@ namespace RepositoryLayer.Interface
         IList<LabelModel> Display(int UserId);
 
         IList<LabelModel> IsSearched(string input, int UserId);
+
+        Task<bool> IsInsertListOFLabels(List<string> labels, int UserId, int NoteId);
+       
     }
 }

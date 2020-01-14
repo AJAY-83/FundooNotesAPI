@@ -126,5 +126,18 @@ namespace BusinessLayer.Services
             var result = this.labelRepositoryLayer.IsSearched(input, UserId);
             return result;
         }
+
+        public async Task<bool> InsertListOFLabels(List<string> labels, int UserId, int NoteId)
+        {
+            try
+            {
+                var result = await this.labelRepositoryLayer.IsInsertListOFLabels(labels, UserId, NoteId);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

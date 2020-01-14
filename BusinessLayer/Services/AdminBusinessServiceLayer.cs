@@ -114,7 +114,7 @@ namespace BusinessLayer.Services
         /// </summary>
         /// <param name="typeOfUser">The type of user.</param>
         /// <returns>list of users</returns>
-        public async Task<IList<AccountModel>> checkAsync(List<String> typeOfUser)
+        public async Task<IList<AccountModel>> checkAsync(string typeOfUser)
         {
             var result = await this.adminRepositoryLayer.checkAsync(typeOfUser);
             return result;

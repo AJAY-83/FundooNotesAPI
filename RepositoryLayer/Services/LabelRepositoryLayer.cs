@@ -160,5 +160,55 @@ namespace RepositoryLayer.Services
             }
             return note;
            }
+
+
+      public async Task<bool> IsInsertListOFLabels(List<string> labels, int UserId,int NoteId)
+        {
+            try
+            {
+               string labellist = Convert.ToString(labels);
+             
+                foreach (var Id in labels.ToList())
+                {
+                    foreach (var note in this.authenticationContext.Label)
+                    {
+                        
+                        //// checking the notes Id and UserId is Availabel or not into the databse
+                        // var data = this.authenticationContext.Notes.Where(u => u.Id == Id && u.UserId == UserId).FirstOrDefault();
+ 
+
+                        var label = new LabelModel()
+                        {
+                            Label = labellist,
+                            UserId = UserId,
+                            NoteId = NoteId,
+                            CreatedDate = DateTime.Now,
+                            ModifiedDate = DateTime.Now
+
+                        };
+
+                        var adddata = this.authenticationContext.Label.Add(label);
+
+                        if (adddata != null)
+                        {
+                            var result = await authenticationContext.SaveChangesAsync();
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+                return false;
+                
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        
+
         }
+    }
 }

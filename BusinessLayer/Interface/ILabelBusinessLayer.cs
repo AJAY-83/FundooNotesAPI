@@ -43,5 +43,7 @@ namespace BusinessLayer.Interface
         IList<LabelModel> Display(int UserId);
 
         IList<LabelModel> IsSearched(string input, int UserId);
+
+        Task<bool> InsertListOFLabels(List<string> labels, int UserId,int NoteId);
     }
 }

@@ -132,7 +132,7 @@ namespace FundooNotesAPI.Controllers
         /// <param name="Id">The identifier.</param>
         /// <param name="file">The file.</param>
         /// <returns>InsertImage</returns>
-        [HttpPost("UploadImage")]
+        [HttpPost("Image")]
         public async Task<IActionResult> InsertImage([FromForm]  int Id, IFormFile file)
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
@@ -184,7 +184,7 @@ namespace FundooNotesAPI.Controllers
         /// Determines whether this instance is trashed.
         /// </summary>
         /// <returns>trashednotes</returns>
-        [HttpGet("AllTrash")]
+        [HttpGet("Trash")]
         public async Task<IActionResult> IsTrashed()
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
@@ -219,7 +219,7 @@ namespace FundooNotesAPI.Controllers
         /// Archives this instance.
         /// </summary>
         /// <returns>Get Archive</returns>
-        [HttpGet("GetArchive")]
+        [HttpGet("Archive")]
         public IActionResult Archive()
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
@@ -277,7 +277,7 @@ namespace FundooNotesAPI.Controllers
         /// <param name="Id">The identifier.</param>
         /// <param name="Color">The color.</param>
         /// <returns>Change Color</returns>
-        [HttpPut("SetColor")]
+        [HttpPut("Color")]
         public async Task<IActionResult> SetColor( ColorRequest colorRequest)
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
@@ -304,7 +304,7 @@ namespace FundooNotesAPI.Controllers
         /// <param name="Id">The identifier.</param>
         /// <param name="Reminder">The reminder.</param>
         /// <returns>reminder</returns>
-        [HttpPost("SetReminder")]
+        [HttpPost("Reminder")]
         public async Task<IActionResult> SetReminder(RequestReminder requestReminder)
         {
          
@@ -460,7 +460,7 @@ namespace FundooNotesAPI.Controllers
         }
 
 
-        [HttpGet("LabelsOnNote")]
+        [HttpGet("Note")]
         public IActionResult LabelsWithNotes()
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
