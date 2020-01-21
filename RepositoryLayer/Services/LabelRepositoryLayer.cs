@@ -42,7 +42,7 @@ namespace RepositoryLayer.Services
                     Label = addLabel.Label,                   
                     Id= addLabel.Id,
                     UserId = UserId,
-                    NoteId=addLabel.NoteId,
+                   // NoteId=addLabel.NoteId,
                     CreatedDate = DateTime.Now,
                     ModifiedDate = DateTime.Now
 
@@ -181,7 +181,7 @@ namespace RepositoryLayer.Services
                         {
                             Label = labellist,
                             UserId = UserId,
-                            NoteId = NoteId,
+                            //NoteId = NoteId,
                             CreatedDate = DateTime.Now,
                             ModifiedDate = DateTime.Now
 

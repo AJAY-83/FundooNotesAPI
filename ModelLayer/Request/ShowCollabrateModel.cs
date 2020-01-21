@@ -8,6 +8,6 @@ namespace CommonLayer.Request
     {
         public int NoteId { get; set; }
 
-        public int ReceiverId { get; set; }
+        public IList<int> ReceiverId { get; set; }
     }
 }

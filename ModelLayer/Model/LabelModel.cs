@@ -23,9 +23,7 @@ namespace CommonLayer.Model
         /// </value>
         [Key]
         public int Id { get; set; }
-
-
-        public int NoteId { get; set; }
+      
 
         /// <summary>
         /// Gets or sets the label.

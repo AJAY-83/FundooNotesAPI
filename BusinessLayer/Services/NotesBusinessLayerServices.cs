@@ -413,9 +413,21 @@ namespace BusinessLayer.Services
             return result;
         }
 
-        public IList<NoteLabel> LabelsOnNote(int UserId)
+        //public IList<NoteLabel> LabelsOnNote(int UserId)
+        //{
+        //    var result = this.notesRepositoryLayer.LabelsOnNote(UserId);
+        //    return result;
+        //}
+
+        public async Task<NoteLabel> LabelOnNotes(NoteLabel noteLabel, int UserId)
         {
-            var result = this.notesRepositoryLayer.LabelsOnNote(UserId);
+            var result =await this.notesRepositoryLayer.LabelOnNotes(noteLabel, UserId);
+            return result;
+        }
+
+        public async Task<bool> RemoveLabelfromNote(int UserId, int NoteId)
+        {
+            var result = await this.notesRepositoryLayer.RemoveLabelfromNote(UserId, NoteId);
             return result;
         }
     }

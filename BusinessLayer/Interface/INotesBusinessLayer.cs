@@ -179,6 +179,10 @@ namespace BusinessLayer.Interface
         /// <returns></returns>
         IList<NotesModel> Sorting(int UserId);
 
-        IList<NoteLabel> LabelsOnNote(int UserId);
+        // IList<NoteLabel> LabelsOnNote(int UserId);
+
+        Task<NoteLabel> LabelOnNotes(NoteLabel noteLabel, int UserId);
+
+        Task<bool> RemoveLabelfromNote(int UserId, int NoteId);
     }
 }

@@ -533,48 +533,58 @@ namespace RepositoryLayer.Services
         /// <param name="Email"></param>
         /// <returns></returns>
         public async Task<CollabratorModel> IsCollabrate(ShowCollabrateModel showCollabrateModel, int UserId)
-        {            
-            //// checks the NoteId exist or not            
-            var idChecking = this.authenticationContext.UserAccountTable.FirstOrDefault(u => u.Id == showCollabrateModel.ReceiverId );
-            ////checking the Note Id is available in database or  not
-            var notesIdCheck = this.authenticationContext.Notes.FirstOrDefault(u => u.Id == showCollabrateModel.NoteId);
-
-            //// ifn ot present into the database i will return the null 
-            if (notesIdCheck == null)
+        {
+            try
             {
-                return null;
-            }
-                
-            //// here   checking  the Collabrated user is present into database or not
-            if (idChecking != null)
+                //// checks the NoteId exist or not            
+                //var idChecking = this.authenticationContext.UserAccountTable.FirstOrDefault(u => u.Id.Equals(showCollabrateModel.ReceiverId));
+                ////checking the Note Id is available in database or  not
+                var notesIdCheck = this.authenticationContext.Notes.FirstOrDefault(u => u.Id == showCollabrateModel.NoteId);
+
+                //// ifn ot present into the database i will return the null 
+                if (notesIdCheck == null)
+                {
+                    return null;
+                }
+
+                //// here   checking  the Collabrated user is present into database or not
+                if (notesIdCheck != null)
                 {
 
-                  var  collabratorModel = new CollabratorModel()
+                    var collabratorModel = new CollabratorModel()
                     {
                         UserId = UserId,
                         NotesId = showCollabrateModel.NoteId,
-                        ReceiverId=showCollabrateModel.ReceiverId
+                        ReceiverId = showCollabrateModel.ReceiverId
                     };
 
-                //// inserting the Collabrator records inside the table 
+                    //// inserting the Collabrator records inside the table 
                     this.authenticationContext.Collabrator.Add(collabratorModel);
                     await this.authenticationContext.SaveChangesAsync();
-                //// cerating  the response object here display the only needed  information of the user
-                   var response = new CollabratorModel() {
-                    UserId=collabratorModel.UserId,
-                    NotesId=collabratorModel.NotesId,
-                    ReceiverId=collabratorModel.ReceiverId,
-                    Id=collabratorModel.Id
-                    
-                   };
-                //// return the expecterd output 
+                    //// cerating  the response object here display the only needed  information of the user
+                    var response = new CollabratorModel()
+                    {
+                        UserId = collabratorModel.UserId,
+                        NotesId = collabratorModel.NotesId,
+                        ReceiverId = collabratorModel.ReceiverId,
+                        Id = collabratorModel.Id
+
+                    };
+                    //// return the expecterd output 
                     return response;
                 }
                 else
                 {
                     return null;
                 }
-           
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+
         }
 
         /// <summary>
@@ -714,37 +724,92 @@ namespace RepositoryLayer.Services
             }            
         }
 
-
-
-        public IList<NoteLabel> LabelsOnNote(int UserId)
+        public async Task<NoteLabel> LabelOnNotes(NoteLabel noteLabel,int UserId)
         {
-            try
-            {
-                LabelRepositoryLayer labelRepositoryLayer = new LabelRepositoryLayer(authenticationContext);
-                List<NotesModel> notesdata = DisplayAllNotes(UserId).ToList();
-                List<LabelModel> labeldata = labelRepositoryLayer.Display(UserId).ToList();
+            var data = this.authenticationContext.UserAccountTable.Select(user => user.Id == UserId);
 
-                var DBData = (from notes in notesdata
-                              join labels in labeldata
-                              on notes.Id equals labels.NoteId
-                              //join s in supplData on notes.SupplierID equals s.SupplierID
-                              select new NoteLabel()
-                              {
-                                 Id=notes.Id,
-                                  Title=notes.Title,
-                                  Content=notes.Content,
-                                  Label=labels.Label,
-                                  NoteId=labels.NoteId,
-                                  UserId=labels.UserId
-                              });
-                var data= DBData.ToList();
-                return data;
+            var alreadyasing = this.authenticationContext.NoteLabel.SingleOrDefault(label => label.LabelId == noteLabel.LabelId && label.NoteId == noteLabel.NoteId);
+            if (alreadyasing != null)
+            {
+                return null;
             }
-            catch (Exception ex) {
-                throw new Exception(ex.Message);
+
+            if (data != null)
+            {
+                var labels = new NoteLabel()
+                {
+                    UserId = UserId,
+                    NoteId = noteLabel.NoteId,
+                    LabelId = noteLabel.LabelId,
+                    CreatedDate=noteLabel.CreatedDate,
+                    ModifiedDate=noteLabel.ModifiedDate                                      
+                };
+
+                this.authenticationContext.NoteLabel.Add(labels);
+                var result =await  this.authenticationContext.SaveChangesAsync();
+                if (result > 0 )
+                {
+                    return labels;
+                }
+                else {
+                    return null;
+                }
             }
-          
+            else {
+                return null;
+            }            
         }
+
+        public async Task<bool> RemoveLabelfromNote(int UserId, int NoteId)
+        {
+
+            var data = this.authenticationContext.NoteLabel.Where(u => u.UserId == UserId && u.NoteId == NoteId).FirstOrDefault();
+
+            //var result = await authenticationContext.SaveChangesAsync();
+            if (data != null)
+            {
+                  this.authenticationContext.NoteLabel.Remove(data);
+                  await this.authenticationContext.SaveChangesAsync();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
+        //public IList<NoteLabel> LabelsOnNote(int UserId)
+        //{
+        //    try
+        //    {
+        //        LabelRepositoryLayer labelRepositoryLayer = new LabelRepositoryLayer(authenticationContext);
+        //        List<NotesModel> notesdata = DisplayAllNotes(UserId).ToList();
+        //        List<LabelModel> labeldata = labelRepositoryLayer.Display(UserId).ToList();
+                
+
+        //        var DBData = (from notes in notesdata
+        //                      join labels in labeldata
+        //                      on notes.Id equals labels.NoteId
+        //                      //join s in supplData on notes.SupplierID equals s.SupplierID
+        //                      select new NoteLabel()
+        //                      {
+        //                          Id = notes.Id,
+        //                          Title = notes.Title,
+        //                          Content = notes.Content,
+        //                          Label = labels.Label,
+        //                          NoteId = labels.NoteId,
+        //                          UserId = labels.UserId
+        //                      });
+        //        var data = DBData.ToList();
+        //        return data;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.Message);
+        //    }
+
+        //}
 
     }
 }

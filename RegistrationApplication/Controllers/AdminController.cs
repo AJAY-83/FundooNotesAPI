@@ -182,11 +182,7 @@ namespace FundooNotesAPI.Controllers
 
 
 
-        /// <summary>
-        /// generate the Token for the Admin login
-        /// </summary>
-        /// <param name="adminLogin"></param>
-        /// <returns></returns>
+  
 
         /// <summary>
         /// this is for the user list
@@ -215,9 +211,7 @@ namespace FundooNotesAPI.Controllers
         public string LoginToken(AdminLogin adminLogin)
         {
             try
-
             {
-
                 // var data =  this.authentication.UserAccountTable.Where(table => table.Email == adminLogin.Email && table.Password == adminLogin.Password).SingleOrDefault();
                 var row = authentication.UserAccountTable.Where(u => u.Email == adminLogin.Email).SingleOrDefault();
                 bool IsValidUser = authentication.UserAccountTable.Any(x => x.Email == adminLogin.Email && x.Password == adminLogin.Password);
@@ -243,7 +237,6 @@ namespace FundooNotesAPI.Controllers
                            expires: DateTime.Now.AddDays(1),
                            signingCredentials: signinCredentials
                        );
-
                         var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
                         return tokenString.ToString();
                     }
@@ -251,14 +244,11 @@ namespace FundooNotesAPI.Controllers
                     {
                         return "Token Not Generated";
                     }
-
                 }
                 else
                 {
                     return "Email or Password is wrong";
                 }
-
-
             }
             catch (Exception ex)
             {

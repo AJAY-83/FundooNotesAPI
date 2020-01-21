@@ -347,13 +347,42 @@ namespace FundooNotesAPI.Controllers
 
         }
 
-        //[HttpPost("LabelsOnNote")]
-        //public IActionResult SetLabelsOnNote( NoteLabel noteLabel)
-        //{
-        //    int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
-        //    var message = this.notesBusinessLayer.LabelsOnNote(UserId, noteLabel);
-        //    return Ok(new { message });
-        //}
+        [HttpPost("LabelsOnNote")]
+        public async  Task<IActionResult> SetLabelsOnNote(NoteLabel noteLabel)
+        {
+            int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
+            var data =await this.notesBusinessLayer.LabelOnNotes( noteLabel, UserId);
+            if (data != null)
+            {
+                status = "True";
+                message = "Label add on Note";
+                return Ok(new { status,message,data });
+            }
+            else {
+                status = "False";
+                message = "Not Added label on Note";
+                return Ok(new { status,message });
+            }           
+        }
+        [HttpDelete("LabelsOnNote/{NoteId}")]
+        public async Task<IActionResult> RemoveLabelsOnNote(int NoteId)
+        {
+            int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
+            var data = await this.notesBusinessLayer.RemoveLabelfromNote( UserId, NoteId);
+            if (data == true)
+            {
+                status = "True";
+                message = "Label Removed from Note";
+                return Ok(new { status, message, data });
+            }
+            else
+            {
+                status = "False";
+                message = "Not Remove label from Note";
+                return Ok(new { status, message });
+            }
+
+        }
 
         [HttpGet("Search")]
         public IActionResult Searching(string input)
@@ -363,9 +392,10 @@ namespace FundooNotesAPI.Controllers
             return Ok(new { message });
         }
 
-        [HttpPost("{Id}/Collabrator")]
+        [HttpPost("Collabrator")]
         public async Task<IActionResult> Collabrator( ShowCollabrateModel showCollabrateModel)
         {
+            
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
        
             var data = await this.notesBusinessLayer.AddCollabrator(showCollabrateModel,UserId);
@@ -460,22 +490,22 @@ namespace FundooNotesAPI.Controllers
         }
 
 
-        [HttpGet("Note")]
-        public IActionResult LabelsWithNotes()
-        {
-            int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
-            var data = this.notesBusinessLayer.LabelsOnNote(UserId);
-            if (data != null)
-            {
-                status = "True";
-                message = "Data Found";
-                return Ok(new {status,message,data });
-            }
-            else {
-                message = "data not found";
-                status = "False";
-                return BadRequest(new { status,message });
-            }
-        }
+        //[HttpGet("Note")]
+        //public IActionResult LabelsWithNotes()
+        //{
+        //    int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
+        //    var data = this.notesBusinessLayer.LabelsOnNote(UserId);
+        //    if (data != null)
+        //    {
+        //        status = "True";
+        //        message = "Data Found";
+        //        return Ok(new {status,message,data });
+        //    }
+        //    else {
+        //        message = "data not found";
+        //        status = "False";
+        //        return BadRequest(new { status,message });
+        //    }
+        //}
     }
 }
