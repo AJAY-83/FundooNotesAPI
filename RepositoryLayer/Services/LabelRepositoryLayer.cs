@@ -141,6 +141,12 @@ namespace RepositoryLayer.Services
             return label;
         }
 
+        /// <summary>
+        /// Determines whether the specified input is searched.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <param name="UserId">The user identifier.</param>
+        /// <returns></returns>
         public IList<LabelModel> IsSearched(string input, int UserId)
         {
             //// Creates the List To store the all Notes and display the All Untrashed Notes
@@ -161,8 +167,15 @@ namespace RepositoryLayer.Services
             return note;
            }
 
-
-      public async Task<bool> IsInsertListOFLabels(List<string> labels, int UserId,int NoteId)
+        /// <summary>
+        /// Determines whether [is insert list of labels] [the specified labels].
+        /// </summary>
+        /// <param name="labels">The labels.</param>
+        /// <param name="UserId">The user identifier.</param>
+        /// <param name="NoteId">The note identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<bool> IsInsertListOFLabels(List<string> labels, int UserId,int NoteId)
         {
             try
             {

@@ -116,5 +116,14 @@ namespace CommonLayer.Model
         ///   <c>true</c> if this instance is google; otherwise, <c>false</c>.
         /// </value>
         public bool IsGoogle { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status.
+        /// status will be Active, In-Active or Pending
+        /// </summary>
+        /// <value>
+        /// The status.
+        /// </value>
+        public string  Status { get; set; }
     }
 }

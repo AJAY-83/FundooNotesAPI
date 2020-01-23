@@ -30,6 +30,7 @@ namespace RepositoryLayer.Services
     using Microsoft.AspNetCore.Http;
     using CloudinaryDotNet;
     using Microsoft.Extensions.Configuration;
+    using CommonLayer.Request;
 
     /// <summary>
     /// AccountRepositoryLayer is class which Inherited from the IAccountRepositoryLayer
@@ -59,7 +60,7 @@ namespace RepositoryLayer.Services
         /// </summary>
         /// <param name="model">registration done or not</param>
         /// <returns></returns>
-        public async Task<bool> Registration(AccountModel model)
+        public async Task<bool> Registration(SignUpRequest model)
         {
             try
             {
@@ -71,7 +72,9 @@ namespace RepositoryLayer.Services
                     Email = model.Email,
                     Password = model.Password,
                     TypeOfUser = model.TypeOfUser,
-                    Services=model.Services
+                    Services=model.Services,
+                    Status="Active"
+                  
                    
                 };
 
@@ -127,12 +130,8 @@ namespace RepositoryLayer.Services
         /// <returns>Message</returns>
         public async Task<string> Login(LoginModel user)
         {
-            if (user == null)
-            {
-                return ErrorMessages.Invaliduserrequest;
-            }
 
-            bool IsValidUser = authentication.UserAccountTable.Any(x => x.Email == user.Email && x.Password==user.Password);
+            bool IsValidUser = authentication.UserAccountTable.Any(x => x.Email == user.Email && x.Password==user.Password && x.Status !="In-Active" || x.Status !="Pending");
             var row = authentication.UserAccountTable.Where(u => u.Email == user.Email).FirstOrDefault();
 
             if (IsValidUser)

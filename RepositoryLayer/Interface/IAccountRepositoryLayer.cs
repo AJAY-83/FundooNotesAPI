@@ -9,6 +9,7 @@
 namespace RepositoryLayer.Interface
 {
     using CommonLayer.Model;
+    using CommonLayer.Request;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using System;
@@ -26,7 +27,7 @@ namespace RepositoryLayer.Interface
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns>registration yes or no</returns>
-        Task<bool> Registration(AccountModel model);
+        Task<bool> Registration(SignUpRequest model);
 
         /// <summary>
         /// Logins the specified model.

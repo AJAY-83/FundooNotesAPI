@@ -193,17 +193,27 @@ namespace RepositoryLayer.Services
 
             ////checking the email id is Exist or not if exist then upload image 
             var idexist =  authenticationContext.Notes.Where(x => x.Id == Id && x.UserId==UserId).FirstOrDefault();
-            if (idexist != null)
+
+            //// here checking the Services 
+            var checksServices = this.authenticationContext.UserAccountTable.Where(user => user.Id == UserId && user.Services == "Advance").FirstOrDefault();
+            if (checksServices != null)
             {
-                //// fetching all Records of Notes and just checking that notes Id
-                var data = this.authenticationContext.Notes.SingleOrDefault(u => u.Id == Id);
+                if (idexist != null)
+                {
+                    //// fetching all Records of Notes and just checking that notes Id
+                    var data = this.authenticationContext.Notes.SingleOrDefault(u => u.Id == Id);
 
-                //// ImageUpload class have the UploadImage method inside that have the file related details
-                data.Image = cloudiNary.UploadImage(file);
+                    //// ImageUpload class have the UploadImage method inside that have the file related details
+                    data.Image = cloudiNary.UploadImage(file);
 
-                //// lastyly save into the databse successfully
-                var result = await authenticationContext.SaveChangesAsync();
-                return true;
+                    //// lastyly save into the databse successfully
+                    var result = await authenticationContext.SaveChangesAsync();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
@@ -267,19 +277,31 @@ namespace RepositoryLayer.Services
             //// creates List to store the all trashed Notes
             List<NotesModel> trashednote = new List<NotesModel>();
 
+            //// checks the service is Advance or not if service is Advance so it have permission 
+            var checksServices = this.authenticationContext.UserAccountTable.Where(user => user.Id == UserId && user.Services == "Advance").FirstOrDefault();
             //// getting all notes and store into the trashednote 
-            foreach (var line in this.authenticationContext.Notes)
+
+            if (checksServices != null)
             {
-                if (line.UserId == UserId)
+                foreach (var line in this.authenticationContext.Notes)
                 {
-                    if (line.IsTrash == true)
+                    if (line.UserId == UserId)
                     {
-                        trashednote.Add(line);
+                        if (line.IsTrash == true)
+                        {
+                            trashednote.Add(line);
+                        }
                     }
-                }                             
+                }
+
+                //// return all trashed notes
+                return trashednote;
+
             }
-            //// return all trashed notes
-            return trashednote;
+            else {
+                return null;
+            }
+           
         }
 
         /// <summary>
@@ -293,28 +315,36 @@ namespace RepositoryLayer.Services
             //// checking the notes Id and UserId is Availabel or not into the databse
             var data =   this.authenticationContext.Notes.Where(u => u.Id == Id && u.UserId==UserId).FirstOrDefault();
 
-            //// checks that is null or  not null
-            if (data != null)
+            //// checks the service is Advance or not if service is Advance so it have permission 
+            var checksServices = this.authenticationContext.UserAccountTable.Where(user => user.Id == UserId && user.Services == "Advance").FirstOrDefault();
+           
+            if (checksServices != null)
             {
-                //// if IsTRash is true make it  false 
-                /// it means untrashed the Notes and save it into the database
-                if (data.IsTrash == true)
+                //// checks that is null or  not null
+                if (data != null)
                 {
-                    data.IsTrash =  false;
-                    data.ModifiedDate = DateTime.Now;
-                    this.authenticationContext.SaveChanges();
-                     return false;
+                    //// if IsTRash is true make it  false 
+                    /// it means untrashed the Notes and save it into the database
+                    if (data.IsTrash == true)
+                    {
+                        data.IsTrash = false;
+                        data.ModifiedDate = DateTime.Now;
+                        this.authenticationContext.SaveChanges();
+                        return false;
+                    }
+                    else
+                    {
+                        //// if IsTrash is false then make it true
+                        //// means trash the Note and save into Database
+                        data.IsTrash = true;
+                        data.ModifiedDate = DateTime.Now;
+                        this.authenticationContext.SaveChanges();
+                        return true;
+                    }
                 }
-                else {
-                    //// if IsTrash is false then make it true
-                    //// means trash the Note and save into Database
-                    data.IsTrash = true;
-                    data.ModifiedDate = DateTime.Now;
-                     this.authenticationContext.SaveChanges();
-                    return true;
-                }
+                
             }
-
+                       
             //// userId and Notes Id must be same then and then it will perform the operation
             ////otherwise it will throw the error
             return false;                
@@ -329,17 +359,28 @@ namespace RepositoryLayer.Services
         {
             List<NotesModel> archive = new List<NotesModel>();
 
-            foreach (var line in authenticationContext.Notes)
+            //// checks the service is Advance or not if service is Advance so it have permission 
+            var checksServices = this.authenticationContext.UserAccountTable.Where(user => user.Id == UserId && user.Services == "Advance").FirstOrDefault();
+
+            if (checksServices != null)
             {
-                if (UserId == line.UserId)
+                foreach (var line in authenticationContext.Notes)
                 {
-                    if (line.IsArchive == true)
+                    if (UserId == line.UserId)
                     {
-                        archive.Add(line);
+                        if (line.IsArchive == true)
+                        {
+                            archive.Add(line);
+                        }
                     }
                 }
+                return archive;
             }
-            return archive;
+            else
+            {
+                return null;
+            }
+           
         }
 
         /// <summary>
@@ -352,23 +393,34 @@ namespace RepositoryLayer.Services
         {
             var user = this.authenticationContext.Notes.Where(u => u.UserId == UserId && u.Id == Id).FirstOrDefault();
 
-            if (user != null)
+            //// checks the service is Advance or not if service is Advance so it have permission 
+            var checksServices = this.authenticationContext.UserAccountTable.Where(userArchive => userArchive.Id == UserId && userArchive.Services == "Advance").FirstOrDefault();
+
+            if (checksServices != null)
             {
-                if (user.IsArchive == true)
+                if (user != null)
                 {
-                    user.IsArchive = false;
-                    user.ModifiedDate = DateTime.Now;
-                    this.authenticationContext.SaveChanges();
-                    return false;
-                }
-                else {
-                    user.IsArchive = true;
-                    user.ModifiedDate = DateTime.Now;
-                    this.authenticationContext.SaveChanges();
-                    return true;
+                    if (user.IsArchive == true)
+                    {
+                        user.IsArchive = false;
+                        user.ModifiedDate = DateTime.Now;
+                        this.authenticationContext.SaveChanges();
+                        return false;
+                    }
+                    else
+                    {
+                        user.IsArchive = true;
+                        user.ModifiedDate = DateTime.Now;
+                        this.authenticationContext.SaveChanges();
+                        return true;
+                    }
                 }
             }
+            else {
+                return false;
+            }
             return false;
+           
         }
 
         /// <summary>
@@ -381,21 +433,32 @@ namespace RepositoryLayer.Services
         {
             var user =  this.authenticationContext.Notes.Where(u => u.UserId == UserId && u.Id == Id).FirstOrDefault();
 
-            if (user != null)
+
+            //// checks the service is Advance or not if service is Advance so it have permission 
+            var checksServices = this.authenticationContext.UserAccountTable.Where(pinuser => pinuser.Id == UserId && pinuser.Services == "Advance").FirstOrDefault();
+
+            if (checksServices != null)
             {
-                if (user.IsPin == true)
+                if (user != null)
                 {
-                    user.IsPin = false;
-                    user.ModifiedDate = DateTime.Now;
-                    this.authenticationContext.SaveChanges();
-                    return false;
+                    if (user.IsPin == true)
+                    {
+                        user.IsPin = false;
+                        user.ModifiedDate = DateTime.Now;
+                        this.authenticationContext.SaveChanges();
+                        return false;
+                    }
+                    else
+                    {
+                        user.IsPin = true;
+                        user.ModifiedDate = DateTime.Now;
+                        this.authenticationContext.SaveChanges();
+                        return true;
+                    }
                 }
-                else {
-                    user.IsPin = true;
-                    user.ModifiedDate = DateTime.Now;
-                    this.authenticationContext.SaveChanges();
-                    return true;
-                }
+            }
+            else {
+                return false;
             }
             return false;         
         }
@@ -410,27 +473,35 @@ namespace RepositoryLayer.Services
         public async Task<ColorRequest> ChangeColor(int UserId,ColorRequest colorRequest)
         {
             var user = this.authenticationContext.Notes.Where(u => u.UserId == UserId && u.Id ==colorRequest.Id).SingleOrDefault();
-            if (user != null)
-            {
-                var model = new NotesModel()
-                {
-                    Color = colorRequest.Color,
-                    ModifiedDate = colorRequest.ModifiedDate
-                };
-                this.authenticationContext.SaveChanges();
 
-                var response = new ColorRequest()
+            //// checks the service is Advance or not if service is Advance so it have permission 
+            var checksServices = this.authenticationContext.UserAccountTable.Where(pinuser => pinuser.Id == UserId && pinuser.Services == "Advance").FirstOrDefault();
+
+            if (checksServices != null)
+            {
+                if (user != null)
                 {
-                    Id=colorRequest.Id,
-                    Color=colorRequest.Color,
-                    ModifiedDate=colorRequest.ModifiedDate
-                };
-                return response ;
-            }
-            else {
+                    var model = new NotesModel()
+                    {
+                        Color = colorRequest.Color,
+                        ModifiedDate = colorRequest.ModifiedDate
+                    };
+                    this.authenticationContext.SaveChanges();
+
+                    var response = new ColorRequest()
+                    {
+                        Id = colorRequest.Id,
+                        Color = colorRequest.Color,
+                        ModifiedDate = colorRequest.ModifiedDate
+                    };
+                    return response;
+                }
+            }          
+            else
+            {
                 return null;
             }
-           
+            return null;
         }
 
         /// <summary>
@@ -443,22 +514,33 @@ namespace RepositoryLayer.Services
         public async Task<RequestReminder> SetReminder(int UserId, RequestReminder requestReminder)
         {
             var user= this.authenticationContext.Notes.Where(u => u.UserId == UserId && u.Id ==requestReminder.Id).SingleOrDefault();
-            if (user != null)
+
+            //// checks the service is Advance or not if service is Advance so it have permission 
+            var checksServices = this.authenticationContext.UserAccountTable.Where(pinuser => pinuser.Id == UserId && pinuser.Services == "Advance").FirstOrDefault();
+
+            if (checksServices != null)
             {
-                var model = new NotesModel()
+                if (user != null)
                 {
-                    Reminder = requestReminder.Reminder,
-                    ModifiedDate = DateTime.Now
-                };
-                this.authenticationContext.SaveChanges();
+                    var model = new NotesModel()
+                    {
+                        Reminder = requestReminder.Reminder,
+                        ModifiedDate = DateTime.Now
+                    };
+                    this.authenticationContext.SaveChanges();
 
-                var response = new RequestReminder()
+                    var response = new RequestReminder()
+                    {
+                        Id = requestReminder.Id,
+                        Reminder = requestReminder.Reminder
+                    };
+
+                    return response;
+                }
+                else
                 {
-                    Id=requestReminder.Id,
-                    Reminder=requestReminder.Reminder
-                };
-
-                return response;
+                    return null;
+                }
             }
             else {
                 return null;
@@ -475,28 +557,27 @@ namespace RepositoryLayer.Services
         public async Task<bool> DeleteReminder(int UserId, int Id)
         {
             var user = this.authenticationContext.Notes.Where(u => u.UserId == UserId && u.Id == Id).SingleOrDefault();
+            //// checks the service is Advance or not if service is Advance so it have permission 
+            var checksServices = this.authenticationContext.UserAccountTable.Where(pinuser => pinuser.Id == UserId && pinuser.Services == "Advance").FirstOrDefault();
 
-            if (user != null)
+            if (checksServices != null)
             {
-                user.Reminder = null;
-                await this.authenticationContext.SaveChangesAsync();
-                return true;
+                if (user != null)
+                {
+                    user.Reminder = null;
+                    await this.authenticationContext.SaveChangesAsync();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else {
                 return false;
-           }
+            }
         }
 
-        /// <summary>
-        ///set the label on note
-        /// </summary>
-        /// <param name="UserId"></param>
-        /// <param name="noteLabel"></param>
-        /// <returns></returns>
-        //public string SetLabelsOnNote(int UserId,NoteLabel noteLabel)
-        //{
-        //    return "set labels on note";
-        //}
 
         /// <summary>
         /// Determines whether the specified input is searched.
@@ -534,6 +615,8 @@ namespace RepositoryLayer.Services
         /// <returns></returns>
         public async Task<CollabratorModel> IsCollabrate(ShowCollabrateModel showCollabrateModel, int UserId)
         {
+
+
             try
             {
                 //// checks the NoteId exist or not            
@@ -541,37 +624,47 @@ namespace RepositoryLayer.Services
                 ////checking the Note Id is available in database or  not
                 var notesIdCheck = this.authenticationContext.Notes.FirstOrDefault(u => u.Id == showCollabrateModel.NoteId);
 
+                //// checks the service is Advance or not if service is Advance so it have permission 
+                var checksServices = this.authenticationContext.UserAccountTable.Where(pinuser => pinuser.Id == UserId && pinuser.Services == "Advance").FirstOrDefault();
+                 
                 //// ifn ot present into the database i will return the null 
                 if (notesIdCheck == null)
                 {
                     return null;
                 }
 
-                //// here   checking  the Collabrated user is present into database or not
-                if (notesIdCheck != null)
+                if (checksServices != null)
                 {
-
-                    var collabratorModel = new CollabratorModel()
+                    //// here   checking  the Collabrated user is present into database or not
+                    if (notesIdCheck != null)
                     {
-                        UserId = UserId,
-                        NotesId = showCollabrateModel.NoteId,
-                        ReceiverId = showCollabrateModel.ReceiverId
-                    };
 
-                    //// inserting the Collabrator records inside the table 
-                    this.authenticationContext.Collabrator.Add(collabratorModel);
-                    await this.authenticationContext.SaveChangesAsync();
-                    //// cerating  the response object here display the only needed  information of the user
-                    var response = new CollabratorModel()
+                        var collabratorModel = new CollabratorModel()
+                        {
+                            UserId = UserId,
+                            NotesId = showCollabrateModel.NoteId,
+                            ReceiverId = showCollabrateModel.ReceiverId
+                        };
+
+                        //// inserting the Collabrator records inside the table 
+                        this.authenticationContext.Collabrator.Add(collabratorModel);
+                        await this.authenticationContext.SaveChangesAsync();
+                        //// cerating  the response object here display the only needed  information of the user
+                        var response = new CollabratorModel()
+                        {
+                            UserId = collabratorModel.UserId,
+                            NotesId = collabratorModel.NotesId,
+                            ReceiverId = collabratorModel.ReceiverId,
+                            Id = collabratorModel.Id
+
+                        };
+                        //// return the expecterd output 
+                        return response;
+                    }
+                    else
                     {
-                        UserId = collabratorModel.UserId,
-                        NotesId = collabratorModel.NotesId,
-                        ReceiverId = collabratorModel.ReceiverId,
-                        Id = collabratorModel.Id
-
-                    };
-                    //// return the expecterd output 
-                    return response;
+                        return null;
+                    }
                 }
                 else
                 {
@@ -597,17 +690,27 @@ namespace RepositoryLayer.Services
         {
             var data = this.authenticationContext.Collabrator.Where(u => u.Id == Id && u.UserId == UserId).FirstOrDefault();
 
-            //var result = await authenticationContext.SaveChangesAsync();
-            if (data != null)
+
+            //// checks the service is Advance or not if service is Advance so it have permission 
+            var checksServices = this.authenticationContext.UserAccountTable.Where(pinuser => pinuser.Id == UserId && pinuser.Services == "Advance").FirstOrDefault();
+
+            if (checksServices != null)
             {
-                var result = authenticationContext.Collabrator.Remove(data);
-                await this.authenticationContext.SaveChangesAsync();
-                return true;
+                //var result = await authenticationContext.SaveChangesAsync();
+                if (data != null)
+                {
+                    var result = authenticationContext.Collabrator.Remove(data);
+                    await this.authenticationContext.SaveChangesAsync();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
-            {
+            else {
                 return false;
-            }            
+            }
         }
 
         /// <summary>
@@ -625,35 +728,46 @@ namespace RepositoryLayer.Services
 
             try
             {
-                foreach (var Id in NotesId)
-                {
-                    foreach (var note in this.authenticationContext.Notes)
-                    {
-                        //// checking the notes Id and UserId is Availabel or not into the databse
-                        var data = this.authenticationContext.Notes.Where(u =>u.Id==Id && u.UserId == UserId).FirstOrDefault();
+                //// checks the service is Advance or not if service is Advance so it have permission 
+                var checksServices = this.authenticationContext.UserAccountTable.Where(pinuser => pinuser.Id == UserId && pinuser.Services == "Advance").FirstOrDefault();
 
-                        //// checks that is null or  not null
-                        if (data != null)
+                if (checksServices != null)
+                {
+                    foreach (var Id in NotesId)
+                    {
+                        foreach (var note in this.authenticationContext.Notes)
                         {
-                            //// if IsTRash is true make it  false 
-                            //// it means untrashed the Notes and save it into the database
-                            if (data.IsTrash == false)
+                            //// checking the notes Id and UserId is Availabel or not into the databse
+                            var data = this.authenticationContext.Notes.Where(u => u.Id == Id && u.UserId == UserId).FirstOrDefault();
+
+                            //// checks that is null or  not null
+                            if (data != null)
                             {
-                                data.IsTrash = true;
-                                data.ModifiedDate = DateTime.Now;
+                                //// if IsTRash is true make it  false 
+                                //// it means untrashed the Notes and save it into the database
+                                if (data.IsTrash == false)
+                                {
+                                    data.IsTrash = true;
+                                    data.ModifiedDate = DateTime.Now;
+                                }
+                                else
+                                {
+                                    data.IsTrash = false;
+                                    data.ModifiedDate = DateTime.Now;
+                                }
+
+
                             }
-                            else {
-                                data.IsTrash = false;
-                                data.ModifiedDate = DateTime.Now;
-                            }
-                           
-                            
+
                         }
-                      
+                        this.authenticationContext.SaveChanges();
                     }
-                    this.authenticationContext.SaveChanges();
+                    return true;
                 }
-                return true;
+                else {
+                    return false;
+                }
+                
             }
             catch (Exception ex)
             {
@@ -676,30 +790,39 @@ namespace RepositoryLayer.Services
 
             try
             {
-                foreach (var Id in NotesId)
+                //// checks the service is Advance or not if service is Advance so it have permission 
+                var checksServices = this.authenticationContext.UserAccountTable.Where(pinuser => pinuser.Id == UserId && pinuser.Services == "Advance").FirstOrDefault();
+
+                if (checksServices != null)
                 {
-                    foreach (var note in this.authenticationContext.Notes)
+                    foreach (var Id in NotesId)
                     {
-                        //// checking the notes Id and UserId is Availabel or not into the databse
-                        var data = this.authenticationContext.Notes.Where(u => u.Id == Id && u.UserId == UserId).FirstOrDefault();
-
-                        //// checks that is null or  not null
-                        if (data != null)
+                        foreach (var note in this.authenticationContext.Notes)
                         {
-                            //// if IsTRash is true make it  false 
-                            /// it means untrashed the Notes and save it into the database
-                            if (data.IsTrash == true)
-                            {
-                                data.IsTrash = false;
-                                data.ModifiedDate = DateTime.Now;
-                            }
-                                                  
-                        }                                                                      
-                    }
+                            //// checking the notes Id and UserId is Availabel or not into the databse
+                            var data = this.authenticationContext.Notes.Where(u => u.Id == Id && u.UserId == UserId).FirstOrDefault();
 
-                    this.authenticationContext.SaveChanges();
+                            //// checks that is null or  not null
+                            if (data != null)
+                            {
+                                //// if IsTRash is true make it  false 
+                                /// it means untrashed the Notes and save it into the database
+                                if (data.IsTrash == true)
+                                {
+                                    data.IsTrash = false;
+                                    data.ModifiedDate = DateTime.Now;
+                                }
+
+                            }
+                        }
+
+                        this.authenticationContext.SaveChanges();
+                    }
+                    return true;
                 }
-                return true;
+                else {
+                    return false;
+                }
             }            
             catch (Exception ex)
             {
@@ -707,73 +830,122 @@ namespace RepositoryLayer.Services
             }
         }
 
+        /// <summary>
+        /// Sortings the specified user identifier.
+        /// </summary>
+        /// <param name="UserId">The user identifier.</param>
+        /// <returns></returns>
         public IList<NotesModel> Sorting( int UserId)
         {
             //// Creates the List To store the all Notes and display the All Untrashed Notes
             List<NotesModel> note = new List<NotesModel>();
             var data = this.authenticationContext.UserAccountTable.Where(id => id.Id == UserId).FirstOrDefault();
-            if(data != null)
-            { 
-            List<NotesModel> sortedUsers = this.authenticationContext.Notes.OrderBy(user => user.Title).ToList();
-               
-             //// this.authenticationContext.Notes.OrderBy(user => user.Content) .ThenByDescending(user => user.Title).ToList()
-                return sortedUsers;                           
-            }
-            else {
-                return null;
-            }            
-        }
 
-        public async Task<NoteLabel> LabelOnNotes(NoteLabel noteLabel,int UserId)
-        {
-            var data = this.authenticationContext.UserAccountTable.Select(user => user.Id == UserId);
+            //// checks the service is Advance or not if service is Advance so it have permission 
+            var checksServices = this.authenticationContext.UserAccountTable.Where(pinuser => pinuser.Id == UserId && pinuser.Services == "Advance").FirstOrDefault();
 
-            var alreadyasing = this.authenticationContext.NoteLabel.SingleOrDefault(label => label.LabelId == noteLabel.LabelId && label.NoteId == noteLabel.NoteId);
-            if (alreadyasing != null)
+            if (checksServices != null)
             {
-                return null;
-            }
-
-            if (data != null)
-            {
-                var labels = new NoteLabel()
+                if (data != null)
                 {
-                    UserId = UserId,
-                    NoteId = noteLabel.NoteId,
-                    LabelId = noteLabel.LabelId,
-                    CreatedDate=noteLabel.CreatedDate,
-                    ModifiedDate=noteLabel.ModifiedDate                                      
-                };
+                    List<NotesModel> sortedUsers = this.authenticationContext.Notes.OrderBy(user => user.Title).ToList();
 
-                this.authenticationContext.NoteLabel.Add(labels);
-                var result =await  this.authenticationContext.SaveChangesAsync();
-                if (result > 0 )
-                {
-                    return labels;
+                    //// this.authenticationContext.Notes.OrderBy(user => user.Content) .ThenByDescending(user => user.Title).ToList()
+                    return sortedUsers;
                 }
-                else {
+                else
+                {
                     return null;
                 }
             }
             else {
                 return null;
-            }            
+            }
         }
 
+        /// <summary>
+        /// Labels the on notes.
+        /// </summary>
+        /// <param name="noteLabel">The note label.</param>
+        /// <param name="UserId">The user identifier.</param>
+        /// <returns></returns>
+        public async Task<NoteLabel> LabelOnNotes(NoteLabel noteLabel,int UserId)
+        {
+            var data = this.authenticationContext.UserAccountTable.Select(user => user.Id == UserId);
+     
+            var alreadyasing = this.authenticationContext.NoteLabel.SingleOrDefault(label => label.LabelId == noteLabel.LabelId && label.NoteId == noteLabel.NoteId);
+
+            //// checks the service is Advance or not if service is Advance so it have permission 
+            var checksServices = this.authenticationContext.UserAccountTable.Where(pinuser => pinuser.Id == UserId && pinuser.Services == "Advance").FirstOrDefault();
+          
+            
+            if (alreadyasing != null)
+            {
+                return null;
+            }
+            if (checksServices != null)
+            {
+                if (data != null)
+                {
+                    var labels = new NoteLabel()
+                    {
+                        UserId = UserId,
+                        NoteId = noteLabel.NoteId,
+                        LabelId = noteLabel.LabelId,
+                        CreatedDate = noteLabel.CreatedDate,
+                        ModifiedDate = noteLabel.ModifiedDate
+                    };
+
+                    this.authenticationContext.NoteLabel.Add(labels);
+                    var result = await this.authenticationContext.SaveChangesAsync();
+                    if (result > 0)
+                    {
+                        return labels;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Removes the labelfrom note.
+        /// </summary>
+        /// <param name="UserId">The user identifier.</param>
+        /// <param name="NoteId">The note identifier.</param>
+        /// <returns></returns>
         public async Task<bool> RemoveLabelfromNote(int UserId, int NoteId)
         {
 
             var data = this.authenticationContext.NoteLabel.Where(u => u.UserId == UserId && u.NoteId == NoteId).FirstOrDefault();
 
-            //var result = await authenticationContext.SaveChangesAsync();
-            if (data != null)
+            //// checks the service is Advance or not if service is Advance so it have permission 
+            var checksServices = this.authenticationContext.UserAccountTable.Where(pinuser => pinuser.Id == UserId && pinuser.Services == "Advance").FirstOrDefault();
+
+            if (checksServices != null)
             {
-                  this.authenticationContext.NoteLabel.Remove(data);
-                  await this.authenticationContext.SaveChangesAsync();
-                return true;
+                //var result = await authenticationContext.SaveChangesAsync();
+                if (data != null)
+                {
+                    this.authenticationContext.NoteLabel.Remove(data);
+                    await this.authenticationContext.SaveChangesAsync();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
-            {
+            else {
                 return false;
             }
         }

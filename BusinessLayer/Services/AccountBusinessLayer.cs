@@ -10,6 +10,7 @@ namespace BusinessLayer.Services
     using BusinessLayer.Interface;
     using CommonLayer.Constance;
     using CommonLayer.Model;
+    using CommonLayer.Request;
     using Microsoft.AspNetCore.Http;
     using RepositoryLayer.Interface;
     using System;
@@ -46,7 +47,7 @@ namespace BusinessLayer.Services
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns>registration </returns>
-        public async Task<bool> Registration(AccountModel model)
+        public async Task<bool> Registration(SignUpRequest model)
         {
             if (model != null)
             {
@@ -78,6 +79,11 @@ namespace BusinessLayer.Services
             }
         }
 
+        /// <summary>
+        /// Logins the with google.
+        /// </summary>
+        /// <param name="socialLoginModel">The social login model.</param>
+        /// <returns></returns>
         public async Task<bool> LoginWithGoogle(SocialLoginModel socialLoginModel)
         {
             if (socialLoginModel != null)
@@ -150,6 +156,12 @@ namespace BusinessLayer.Services
             }
         }
 
+        /// <summary>
+        /// Logins the with google.
+        /// </summary>
+        /// <param name="IsGoogle">if set to <c>true</c> [is google].</param>
+        /// <param name="UserId">The user identifier.</param>
+        /// <returns></returns>
         public async Task<bool> LoginWithGoogle(bool IsGoogle, int UserId)
         {
             var result = await this.account.IsLoginWithGoogle(IsGoogle,UserId);

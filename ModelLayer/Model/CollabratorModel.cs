@@ -19,7 +19,7 @@ namespace CommonLayer.Model
         public int NotesId { get; set; }
 
         [ForeignKey("AccountModel")]
-        public IList<int> ReceiverId { get; set; }
+        public int ReceiverId { get; set; }
 
 
     }

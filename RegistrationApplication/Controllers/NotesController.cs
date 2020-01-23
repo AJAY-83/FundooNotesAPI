@@ -157,14 +157,23 @@ namespace FundooNotesAPI.Controllers
         /// <param name="Id">The identifier.</param>
         /// <returns>Display
         /// </returns>
-        [HttpGet("{Id}")]
+        [HttpGet("{Id}")] 
         public IActionResult Display(int Id)
         {
 
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
-            var response = this.notesBusinessLayer.Display(Id, UserId);
-             message = "data is displayed";
-            return Ok(new { response, message, Id });
+            var data = this.notesBusinessLayer.Display(Id, UserId);
+            if (data != null)
+            {
+                status = "True";
+                message = "Notes is Displayed";
+                return Ok(new { status, message, data });
+            }
+            else {
+                status = "False";
+                message = "Notes is not Displayed";
+                return BadRequest(new { status, message, Id });
+            }
         }
 
         /// <summary>
@@ -176,8 +185,20 @@ namespace FundooNotesAPI.Controllers
         public IActionResult DisplayAllNotes()
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
-            var message = this.notesBusinessLayer.DisplayAllNotes(UserId);
-            return Ok(new { message });
+            var data = this.notesBusinessLayer.DisplayAllNotes(UserId);
+            //if (data != null)
+            //{
+                status = "True";
+                message = "Notes Displayed";
+                return Ok(new { status,message,data });
+            //}
+            //else
+            //{
+            //    message = "Notes Can't Displayed";
+            //    status = "False";
+            //    BadRequest(new { status, message });
+            //}
+            
         }
 
         /// <summary>
@@ -188,8 +209,18 @@ namespace FundooNotesAPI.Controllers
         public async Task<IActionResult> IsTrashed()
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
-            var status = this.notesBusinessLayer.GetTrashedNotes(UserId);
-            return Ok(new { status });
+            var data = this.notesBusinessLayer.GetTrashedNotes(UserId);
+            if (data != null)
+            {
+                status = "True";
+                message = "Notes Displayed";
+                return Ok(new { status,message,data });
+            }
+            else {
+                status = "False";
+                message = "Notes Not Displayed";
+                return BadRequest(new { status, message });
+            }
         }
 
         /// <summary>
@@ -223,8 +254,18 @@ namespace FundooNotesAPI.Controllers
         public IActionResult Archive()
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
-            var message = this.notesBusinessLayer.GetArchiveNotes(UserId);
-            return Ok(new { message });
+            var data = this.notesBusinessLayer.GetArchiveNotes(UserId);
+            if (data != null)
+            {
+                status = "True";
+                message = "Archive Notes";
+                return Ok(new { status,message,data });
+            }
+            else {
+                status = "False";
+                message = "Archive Can't Display";
+                return BadRequest(new { status, message });
+            }
         }
 
         /// <summary>
@@ -347,6 +388,11 @@ namespace FundooNotesAPI.Controllers
 
         }
 
+        /// <summary>
+        /// Sets the labels on note.
+        /// </summary>
+        /// <param name="noteLabel">The note label.</param>
+        /// <returns></returns>
         [HttpPost("LabelsOnNote")]
         public async  Task<IActionResult> SetLabelsOnNote(NoteLabel noteLabel)
         {
@@ -364,6 +410,12 @@ namespace FundooNotesAPI.Controllers
                 return Ok(new { status,message });
             }           
         }
+
+        /// <summary>
+        /// Removes the labels on note.
+        /// </summary>
+        /// <param name="NoteId">The note identifier.</param>
+        /// <returns></returns>
         [HttpDelete("LabelsOnNote/{NoteId}")]
         public async Task<IActionResult> RemoveLabelsOnNote(int NoteId)
         {
@@ -384,6 +436,11 @@ namespace FundooNotesAPI.Controllers
 
         }
 
+        /// <summary>
+        /// Searchings the specified input.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns></returns>
         [HttpGet("Search")]
         public IActionResult Searching(string input)
         {
@@ -392,6 +449,11 @@ namespace FundooNotesAPI.Controllers
             return Ok(new { message });
         }
 
+        /// <summary>
+        /// Collabrators the specified show collabrate model.
+        /// </summary>
+        /// <param name="showCollabrateModel">The show collabrate model.</param>
+        /// <returns></returns>
         [HttpPost("Collabrator")]
         public async Task<IActionResult> Collabrator( ShowCollabrateModel showCollabrateModel)
         {
@@ -412,6 +474,11 @@ namespace FundooNotesAPI.Controllers
             }            
         }
 
+        /// <summary>
+        /// Removes the collabrators.
+        /// </summary>
+        /// <param name="Id">The identifier.</param>
+        /// <returns></returns>
         [HttpDelete("{Id}/Collabrator")]
         public async Task<IActionResult> RemoveCollabrators(int Id)
         {
@@ -428,8 +495,13 @@ namespace FundooNotesAPI.Controllers
                 return BadRequest(new { status, message });
             }
         }
-        
 
+        /// <summary>
+        /// Bulktrashes the specified identifier.
+        /// </summary>
+        /// <param name="Id">The identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         [HttpPut("BulkTrash")]
         public IActionResult Bulktrash(List<int> Id)
         {
@@ -455,7 +527,12 @@ namespace FundooNotesAPI.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Bulks the untrash.
+        /// </summary>
+        /// <param name="Id">The identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         [HttpPut("BulkUnTrash")]
         public IActionResult BulkUntrash(List<int> Id)
         {
@@ -481,6 +558,10 @@ namespace FundooNotesAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Sortings this instance.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("Sorting")]
         public IActionResult Sorting()
         {

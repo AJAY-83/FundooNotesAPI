@@ -8,6 +8,7 @@
 namespace BusinessLayer.Interface
 {
     using CommonLayer.Model;
+    using CommonLayer.Request;
     using Microsoft.AspNetCore.Http;
     using System;
     using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace BusinessLayer.Interface
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        Task<bool> Registration(AccountModel model);
+        Task<bool> Registration(SignUpRequest model);
 
         /// <summary>
         /// Logins the specified loginmodel.

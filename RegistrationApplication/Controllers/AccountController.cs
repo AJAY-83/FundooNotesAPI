@@ -17,6 +17,7 @@ namespace FundooNotesAPI.Controllers
     using System.Threading.Tasks;
     using BusinessLayer.Interface;
     using CommonLayer.Model;
+    using CommonLayer.Request;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Cors;
@@ -72,7 +73,7 @@ namespace FundooNotesAPI.Controllers
         /// <returns>registration complet</returns>
         [HttpPost("SignUp")] 
         [AllowAnonymous]
-        public async Task<IActionResult> Registration( AccountModel data)
+        public async Task<IActionResult> Registration(SignUpRequest data)
         {
             var status = await account.Registration(data);
 
@@ -206,6 +207,14 @@ namespace FundooNotesAPI.Controllers
                 string message = "Proifle picture not uploaded";
                 return BadRequest(new { status, message });
             }
-        }       
+        }
+
+        //[HttpPost("Logout")]
+        //public async Task<ActionResult> Logout()
+        //{
+        //    await this.signInManager.SignOutAsync();
+
+        //    return Ok();
+        //}
     }
 }

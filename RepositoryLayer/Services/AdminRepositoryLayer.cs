@@ -259,8 +259,7 @@ namespace RepositoryLayer.Services
             //// foreach loop to gets the Trashed Fields
 
             try
-            {
-                
+            {                
                     foreach (var users in this.authentication.UserAccountTable)
                     {
                     //// if user clicks on Button without enter any data into textfield it will show all users
