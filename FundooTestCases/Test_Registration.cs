@@ -1,5 +1,6 @@
 ﻿//using BusinessLayer.Services;
 //using CommonLayer.Model;
+//using CommonLayer.Request;
 //using Moq;
 //using RepositoryLayer.Interface;
 //using System;
@@ -9,55 +10,57 @@
 
 //namespace FundooTestCases
 //{
-   //public class Test_Registration
-   // {
-   //     //[Fact]
-        //public void Registration()
-        //{
-        //    //// Arrange
-        //    var Repository = new Mock<IAccountRepositoryLayer>();
-        //    var businesslayer = new AccountBusinessLayer(Repository.Object);
+//    public class Test_Registration
+//    {
 
-          
-        //    var model = new AccountModel()
-        //    {
-        //        FirstName = "FirstName",
-        //        LastName = "LastName",
-        //        MobileNumber = 123456789,
-        //        Email = "Email",
-        //        Password = "Password"
-        //    };
-
-        //   //// Act
-        //    var data = businesslayer.Registration(model);
-        //    //// Assert  
-//            Assert.NotNull(data);
-//        }
 //        [Fact]
-//        public void ChechEqualsRegistration()
-//        {
-//            //// Arrange
+//public void Registration()
+//{
+//    //// Arrange
+//    var Repository = new Mock<IAccountRepositoryLayer>();
+//    var businesslayer = new AccountBusinessLayer(Repository.Object);
 
-//            var register = new AccountModel()
-//            {
-//                Id=1,
-//                FirstName = "FirstName",
-//                LastName = "LastName",
-//                MobileNumber = 123456789,
-//                Email = "Email",
-//                Password = "Password",
-//                Image="image",
-//                TypeOfUser="basic"
 
-//            };
-//            //// Act
-//            var Repository = new Mock<IAccountRepositoryLayer>();
-//            var businesslayer = new AccountBusinessLayer(Repository.Object);
+//    var model = new SignUpRequest()
+//    {
+//        FirstName = "FirstName",
+//        LastName = "LastName",
+//        MobileNumber = 123456789,
+//        Email = "Email",
+//        Password = "Password"
+//    };
 
-//            var data = businesslayer.Registration(register);
+//    //// Act
+//   var data = businesslayer.Registration(model);
+//    //// Assert  
+//    Assert.NotNull(data);
 
-//            //// Assert
-//            //Assert.Equal(data,register);
 //        }
+//        //[Fact]
+//        //public void ChechEqualsRegistration()
+//        //{
+//        //    // Arrange
+
+//        //    var register = new AccountModel()
+//        //    {
+//        //        Id = 1,
+//        //        FirstName = "FirstName",
+//        //        LastName = "LastName",
+//        //        MobileNumber = 123456789,
+//        //        Email = "Email",
+//        //        Password = "Password",
+//        //        Image = "image",
+//        //        TypeOfUser = "basic"
+
+//        //    };
+//        //    // Act
+//        //    var Repository = new Mock<IAccountRepositoryLayer>();
+//        //    var businesslayer = new AccountBusinessLayer(Repository.Object);
+
+//        //    var data = businesslayer.Registration(register);
+
+//        //    // Assert
+//        //    Assert.Equal(data, register);
+//        //}
 //    }
 //}

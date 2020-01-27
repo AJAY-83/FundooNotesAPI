@@ -11,6 +11,7 @@ namespace BusinessLayer.Services
     using CommonLayer.Constance;
     using CommonLayer.Model;
     using CommonLayer.Request;
+    using CommonLayer.Response;
     using Microsoft.AspNetCore.Http;
     using RepositoryLayer.Interface;
     using ServiceStack.Redis;
@@ -39,19 +40,19 @@ namespace BusinessLayer.Services
         /// <returns>
         /// Add or Not
         /// </returns>
-        public async Task<NoteAddRequest> AddNotes(NoteAddRequest noteAddRequest,int UserId)
+        public async Task<NoteAddRequest> AddNotes(NoteAddRequest noteAddRequest, int UserId)
         {
-            
-                if (noteAddRequest != null)
-                {
-                    var result = await this.notesRepositoryLayer.AddNotes(noteAddRequest, UserId);
-                    return result;
-                }
-                else
-                {
-                    return null;
-                }
-          
+
+            if (noteAddRequest != null)
+            {
+                var result = await this.notesRepositoryLayer.AddNotes(noteAddRequest, UserId);
+                return result;
+            }
+            else
+            {
+                return null;
+            }
+
         }
 
         /// <summary>
@@ -61,11 +62,11 @@ namespace BusinessLayer.Services
         /// <returns>
         /// Update or not
         /// </returns>
-        public async Task<NoteUpdateRequest> UpdateNotes(NoteUpdateRequest noteUpdateRequest,int UserId)
+        public async Task<NoteUpdateRequest> UpdateNotes(NoteUpdateRequest noteUpdateRequest, int UserId)
         {
             if (noteUpdateRequest != null)
             {
-                var result = await this.notesRepositoryLayer.UpdateNotes(noteUpdateRequest,UserId);
+                var result = await this.notesRepositoryLayer.UpdateNotes(noteUpdateRequest, UserId);
                 return result;
             }
             else
@@ -81,11 +82,11 @@ namespace BusinessLayer.Services
         /// <returns>
         /// Delete or Not
         /// </returns>
-        public async Task<bool> DeleteNotes(int Id,int UserId)
+        public async Task<bool> DeleteNotes(int Id, int UserId)
         {
             if (Id > 0)
             {
-                var result = await this.notesRepositoryLayer.DeleteNotes(Id,UserId);
+                var result = await this.notesRepositoryLayer.DeleteNotes(Id, UserId);
                 return result;
             }
             else
@@ -107,7 +108,7 @@ namespace BusinessLayer.Services
         {
             if (Id > 0)
             {
-                var result = await this.notesRepositoryLayer.UploadImage(Id,UserId, file);
+                var result = await this.notesRepositoryLayer.UploadImage(Id, UserId, file);
                 return result;
             }
             else
@@ -123,7 +124,7 @@ namespace BusinessLayer.Services
         /// <returns>
         /// Display the Record
         /// </returns>
-        public IList<NotesModel> Display(int Id,int UserId)
+        public IList<NotesModel> Display(int Id, int UserId)
         {
             var result = this.notesRepositoryLayer.Display(Id, UserId);
             return result;
@@ -134,9 +135,9 @@ namespace BusinessLayer.Services
         /// </summary>
         /// <param name="labelModel">The label model.</param>
         /// <returns></returns>
-        public  IList<NotesModel> GetNotes(int Id,int UserId)
+        public IList<NotesModel> GetNotes(int Id, int UserId)
         {
-            IList<NotesModel> result=new List<NotesModel>();
+            IList<NotesModel> result = new List<NotesModel>();
             using (var client = new RedisClient())
             {
                 string key = Id.ToString();
@@ -144,7 +145,7 @@ namespace BusinessLayer.Services
                 {
                     var getNotes = client.Get(key);
 
-                    result= this.notesRepositoryLayer.Display(Id,UserId);
+                    result = this.notesRepositoryLayer.Display(Id, UserId);
                     return result;
                 }
                 else
@@ -188,7 +189,7 @@ namespace BusinessLayer.Services
         /// <param name="Id">The identifier.</param>
         /// <param name="UserId">The user identifier.</param>
         /// <returns>trash or untrash</returns>
-        public async Task<bool> Trashed( int Id, int UserId)
+        public async Task<bool> Trashed(int Id, int UserId)
         {
             if (Id > 0)
             {
@@ -231,7 +232,7 @@ namespace BusinessLayer.Services
             else {
                 return false;
             }
-         
+
         }
 
         /// <summary>
@@ -242,9 +243,9 @@ namespace BusinessLayer.Services
         /// <returns>
         /// Pin or Unpin
         /// </returns>
-        public async Task<bool> IsPin(int UserId,int Id)
+        public async Task<bool> IsPin(int UserId, int Id)
         {
-            
+
             if (UserId > 0)
             {
                 var result = await this.notesRepositoryLayer.IsPin(UserId, Id);
@@ -271,7 +272,7 @@ namespace BusinessLayer.Services
             Regex colorcode = new Regex(strRegex);
             if (colorcode.IsMatch(colorRequest.Color))
             {
-                var result = await this.notesRepositoryLayer.ChangeColor(UserId,colorRequest);
+                var result = await this.notesRepositoryLayer.ChangeColor(UserId, colorRequest);
                 return result;
             }
             else
@@ -291,10 +292,10 @@ namespace BusinessLayer.Services
         /// </returns>
         public async Task<RequestReminder> SetReminder(int UserId, RequestReminder requestReminder)
         {
-           
+
             if (UserId > 0)
             {
-                var result = await  this.notesRepositoryLayer.SetReminder(UserId, requestReminder);
+                var result = await this.notesRepositoryLayer.SetReminder(UserId, requestReminder);
                 return result;
             }
             else
@@ -313,7 +314,7 @@ namespace BusinessLayer.Services
         /// </returns>
         public async Task<bool> DeleteReminder(int UserId, int Id)
         {
-           
+
             if (UserId > 0)
             {
                 var result = await this.notesRepositoryLayer.DeleteReminder(UserId, Id);
@@ -339,7 +340,7 @@ namespace BusinessLayer.Services
         //    return result;
         //}
 
-        public IList<NotesModel> Search(string input,int UserId)
+        public IList<NotesModel> Search(string input, int UserId)
         {
             var result = this.notesRepositoryLayer.IsSearched(input, UserId);
             return result;
@@ -352,12 +353,12 @@ namespace BusinessLayer.Services
         /// <param name="collabratorModel">The collabrator model.</param>
         /// <param name="SenderEmail">The sender email.</param>
         /// <returns></returns>
-        public async Task<CollabratorModel> AddCollabrator(ShowCollabrateModel showCollabrateModel,int UserId)
+        public async Task<CollabratorModel> AddCollabrator(ShowCollabrateModel showCollabrateModel, int UserId)
         {
-            var result = await this.notesRepositoryLayer.IsCollabrate(showCollabrateModel,UserId);
-        
+            var result = await this.notesRepositoryLayer.IsCollabrate(showCollabrateModel, UserId);
+
             return result;
-                                  
+
         }
 
         /// <summary>
@@ -368,7 +369,7 @@ namespace BusinessLayer.Services
         /// <returns></returns>
         public async Task<bool> RemoveCollabrator(int Id, int UserId)
         {
-            
+
             if (Id > 0)
             {
                 var result = await this.notesRepositoryLayer.IsRemoveCollabrator(Id, UserId);
@@ -379,7 +380,7 @@ namespace BusinessLayer.Services
             }
         }
 
-      
+
 
         public bool BulkTrash(List<int> Id, int UserId)
         {
@@ -387,7 +388,7 @@ namespace BusinessLayer.Services
             {
                 var result = this.notesRepositoryLayer.BulkTrash(Id, UserId);
                 return result;
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -407,7 +408,7 @@ namespace BusinessLayer.Services
         }
 
 
-        public IList<NotesModel> Sorting( int UserId)
+        public IList<NotesModel> Sorting(int UserId)
         {
             var result = this.notesRepositoryLayer.Sorting(UserId);
             return result;
@@ -421,7 +422,7 @@ namespace BusinessLayer.Services
 
         public async Task<NoteLabel> LabelOnNotes(NoteLabel noteLabel, int UserId)
         {
-            var result =await this.notesRepositoryLayer.LabelOnNotes(noteLabel, UserId);
+            var result = await this.notesRepositoryLayer.LabelOnNotes(noteLabel, UserId);
             return result;
         }
 
@@ -430,5 +431,26 @@ namespace BusinessLayer.Services
             var result = await this.notesRepositoryLayer.RemoveLabelfromNote(UserId, NoteId);
             return result;
         }
+
+        public IList<NoteLabel> NoteLabels(int UserId)
+        {
+
+            var result = this.notesRepositoryLayer.DisplayNoteLabels(UserId); ;
+            return result;
+        }
+
+        public IList<NoteLabelsRequest> DisplayLabelsOnNote(int UserId)
+        {
+            var result = this.notesRepositoryLayer.DisplayLabelsOnNote(UserId); 
+            return result;
+
+        }
+
+      public  IList<LabelsWithNotesResponse> labelist(int UserId)
+        {
+            var result = this.notesRepositoryLayer.labelist(UserId);
+            return result;
+        }
+
     }
 }

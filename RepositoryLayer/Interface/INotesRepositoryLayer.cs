@@ -9,6 +9,7 @@ namespace RepositoryLayer.Interface
 {
     using CommonLayer.Model;
     using CommonLayer.Request;
+    using CommonLayer.Response;
     using Microsoft.AspNetCore.Http;
     using Microsoft.VisualBasic;
     using System;
@@ -170,5 +171,11 @@ namespace RepositoryLayer.Interface
 
         Task<NoteLabel> LabelOnNotes(NoteLabel noteLabel, int UserId);
         Task<bool> RemoveLabelfromNote(int UserId, int NoteId);
+
+        IList<NoteLabel> DisplayNoteLabels(int UserId);
+
+        IList<NoteLabelsRequest> DisplayLabelsOnNote(int UserId);
+
+        IList<LabelsWithNotesResponse> labelist(int UserId);
     }
 }

@@ -9,6 +9,7 @@ namespace BusinessLayer.Interface
 {
     using CommonLayer.Model;
     using CommonLayer.Request;
+    using CommonLayer.Response;
     using Microsoft.AspNetCore.Http;
     using System;
     using System.Collections.Generic;
@@ -184,5 +185,12 @@ namespace BusinessLayer.Interface
         Task<NoteLabel> LabelOnNotes(NoteLabel noteLabel, int UserId);
 
         Task<bool> RemoveLabelfromNote(int UserId, int NoteId);
+
+       IList<NoteLabel> NoteLabels(int UserId);
+
+        IList<NoteLabelsRequest> DisplayLabelsOnNote(int UserId);
+
+        IList<LabelsWithNotesResponse> labelist(int UserId);
+
     }
 }

@@ -571,22 +571,43 @@ namespace FundooNotesAPI.Controllers
         }
 
 
-        //[HttpGet("Note")]
-        //public IActionResult LabelsWithNotes()
-        //{
-        //    int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
-        //    var data = this.notesBusinessLayer.LabelsOnNote(UserId);
-        //    if (data != null)
-        //    {
-        //        status = "True";
-        //        message = "Data Found";
-        //        return Ok(new {status,message,data });
-        //    }
-        //    else {
-        //        message = "data not found";
-        //        status = "False";
-        //        return BadRequest(new { status,message });
-        //    }
-        //}
+        [HttpGet("LabelsOnNote")]
+        public IActionResult LabelsWithNotes()
+        {
+            int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
+            var data = this.notesBusinessLayer.NoteLabels(UserId);
+            if (data != null)
+            {
+                status = "True";
+                message = "Data Found";
+                return Ok(new { status, message, data });
+            }
+            else
+            {
+                message = "data not found";
+                status = "False";
+                return BadRequest(new { status, message });
+            }
+        }
+
+        /// <summary>
+        /// Sortings this instance.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("DisplayNoteLabelJoin")]
+        public IActionResult Display()
+        {
+            int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
+            var data = this.notesBusinessLayer.DisplayLabelsOnNote(UserId);
+            return Ok(new { data });
+        }
+
+        [HttpGet("TryGetLabel")]
+       public IActionResult  label()
+        {
+            int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
+            var data = this.notesBusinessLayer.labelist(UserId);
+            return Ok(new { data });
+        }
     }
 }

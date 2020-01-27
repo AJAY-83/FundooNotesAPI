@@ -11,6 +11,7 @@ namespace RepositoryLayer.Services
     using CommonLayer.Constance;
     using CommonLayer.Model;
     using CommonLayer.Request;
+    using CommonLayer.Response;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
     using RepositoryLayer.Context;
@@ -192,13 +193,13 @@ namespace RepositoryLayer.Services
             var image =  (from Notes in authenticationContext.Notes select Notes.Id).FirstOrDefault();
 
             ////checking the email id is Exist or not if exist then upload image 
-            var idexist =  authenticationContext.Notes.Where(x => x.Id == Id && x.UserId==UserId).FirstOrDefault();
+            var idexist =  authenticationContext.Notes.Where(x => x.Id == Id && x.UserId==UserId).Any();
 
             //// here checking the Services 
             var checksServices = this.authenticationContext.UserAccountTable.Where(user => user.Id == UserId && user.Services == "Advance").FirstOrDefault();
             if (checksServices != null)
             {
-                if (idexist != null)
+                if (idexist == true)
                 {
                     //// fetching all Records of Notes and just checking that notes Id
                     var data = this.authenticationContext.Notes.SingleOrDefault(u => u.Id == Id);
@@ -876,7 +877,7 @@ namespace RepositoryLayer.Services
             var alreadyasing = this.authenticationContext.NoteLabel.SingleOrDefault(label => label.LabelId == noteLabel.LabelId && label.NoteId == noteLabel.NoteId);
 
             //// checks the service is Advance or not if service is Advance so it have permission 
-            var checksServices = this.authenticationContext.UserAccountTable.Where(pinuser => pinuser.Id == UserId && pinuser.Services == "Advance").FirstOrDefault();
+            var checksServices = this.authenticationContext.UserAccountTable.Where(pinuser => pinuser.Id == UserId);//&& pinuser.Services == "Advance").FirstOrDefault();
           
             
             if (alreadyasing != null)
@@ -950,6 +951,86 @@ namespace RepositoryLayer.Services
             }
         }
 
+        public IList<NoteLabel> DisplayNoteLabels(int UserId)
+        {
+
+            var data = this.authenticationContext.NoteLabel.Where(x => x.UserId == UserId).FirstOrDefault();
+            List<NoteLabel> note = new List<NoteLabel>();
+            if (data != null)
+            {
+
+                foreach (var line in this.authenticationContext.NoteLabel)
+                {
+                    note.Add(line);
+                }
+            }
+            return note;
+        }
+
+        public  IList<NoteLabelsRequest> DisplayLabelsOnNote(int UserId)
+        {
+   
+            try
+            {
+              List<NoteLabelsRequest> noteLabelsRequests = new List<NoteLabelsRequest>();
+                LabelRepositoryLayer labelRepositoryLayer = new LabelRepositoryLayer(authenticationContext);
+                List<NotesModel> notesdata = DisplayAllNotes(UserId).ToList();
+                List<LabelModel> labeldata = labelRepositoryLayer.Display(UserId).ToList();
+                List<NoteLabel> noteLabels = DisplayNoteLabels(UserId).ToList();
+
+                var data = (from label in labeldata
+                            join labelN in noteLabels
+                            on label.Id equals labelN.LabelId
+                            join notes in notesdata
+                            on labelN.NoteId equals notes.Id
+                            select new NoteLabelsRequest()
+                            {
+                               // LabelId = label.Id,
+                                NoteId = labelN.NoteId,
+                                Label = labelist(UserId).ToList(),
+                                Title = notes.Title,
+                                Content = notes.Content,
+                                Reminder=notes.Reminder
+                                
+
+                            }).ToList();
+                 return data;
+                //foreach (var notelabels in query)
+                //{
+                //    noteLabels.Add(notelabels);
+                //}
+
+               
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
+        public IList<LabelsWithNotesResponse> labelist(int UserId,int noteId)
+        {
+            LabelRepositoryLayer labelRepositoryLayer = new LabelRepositoryLayer(authenticationContext);
+            List<LabelModel> labeldata = labelRepositoryLayer.Display(UserId).ToList();
+            List<NoteLabel> noteLabels = DisplayNoteLabels(UserId).ToList();
+
+            var DBData = (from notesL in noteLabels
+                          join labels in labeldata
+                          on notesL.LabelId equals labels.Id 
+                         
+
+
+                          select new LabelsWithNotesResponse()
+                          {
+                              Id = labels.Id,
+                              Label = labels.Label
+
+                          });
+            var data = DBData.ToList();
+            return data;
+        }
+
+
 
         //public IList<NoteLabel> LabelsOnNote(int UserId)
         //{
@@ -982,6 +1063,5 @@ namespace RepositoryLayer.Services
         //    }
 
         //}
-
     }
 }
