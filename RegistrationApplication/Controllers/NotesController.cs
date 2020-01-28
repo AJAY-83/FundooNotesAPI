@@ -602,12 +602,12 @@ namespace FundooNotesAPI.Controllers
             return Ok(new { data });
         }
 
-        [HttpGet("TryGetLabel")]
-       public IActionResult  label()
-        {
-            int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
-            var data = this.notesBusinessLayer.labelist(UserId);
-            return Ok(new { data });
-        }
+       // [HttpGet("TryGetLabel")]
+       //public IActionResult  label()
+       // {
+       //     int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
+       //     var data = this.notesBusinessLayer.labelist(UserId);
+       //     return Ok(new { data });
+       // }
     }
 }

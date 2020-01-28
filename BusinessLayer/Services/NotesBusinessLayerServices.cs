@@ -446,11 +446,11 @@ namespace BusinessLayer.Services
 
         }
 
-      public  IList<LabelsWithNotesResponse> labelist(int UserId)
-        {
-            var result = this.notesRepositoryLayer.labelist(UserId);
-            return result;
-        }
+      //public  IList<LabelsWithNotesResponse> labelist(int UserId)
+      //  {
+      //      var result = this.notesRepositoryLayer.labelist(UserId);
+      //      return result;
+      //  }
 
     }
 }

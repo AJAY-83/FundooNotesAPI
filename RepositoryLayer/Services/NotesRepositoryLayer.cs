@@ -99,6 +99,7 @@ namespace RepositoryLayer.Services
                 if (data != null)
                 {
                     if (noteUpdateRequest.Title != null)
+
                     {                       
                         data.Title = noteUpdateRequest.Title;
                         data.ModifiedDate = noteUpdateRequest.ModifiedDate;
@@ -1008,7 +1009,8 @@ namespace RepositoryLayer.Services
             }
 
         }
-        public IList<LabelsWithNotesResponse> labelist(int UserId,int noteId)
+
+        public IList<LabelsWithNotesResponse> labelist(int UserId)
         {
             LabelRepositoryLayer labelRepositoryLayer = new LabelRepositoryLayer(authenticationContext);
             List<LabelModel> labeldata = labelRepositoryLayer.Display(UserId).ToList();
@@ -1016,13 +1018,10 @@ namespace RepositoryLayer.Services
 
             var DBData = (from notesL in noteLabels
                           join labels in labeldata
-                          on notesL.LabelId equals labels.Id 
-                         
-
-
+                          on notesL.LabelId equals labels.Id                          
                           select new LabelsWithNotesResponse()
                           {
-                              Id = labels.Id,
+                              Id = labels.Id,                                
                               Label = labels.Label
 
                           });

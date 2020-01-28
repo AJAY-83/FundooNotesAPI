@@ -190,7 +190,7 @@ namespace BusinessLayer.Interface
 
         IList<NoteLabelsRequest> DisplayLabelsOnNote(int UserId);
 
-        IList<LabelsWithNotesResponse> labelist(int UserId);
+        ////IList<LabelsWithNotesResponse> labelist(int UserId);
 
     }
 }
