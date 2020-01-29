@@ -26,7 +26,7 @@ namespace BusinessLayer.Interface
         /// </summary>
         /// <param name="Id">The identifier.</param>
         /// <returns>Updated or not </returns>
-        Task<bool> UpdateLabel(LabelModel labelModel);
+        Task<bool> UpdateLabel(LabelModel labelModel,int UserId);
 
         /// <summary>
         /// Deletelabels the specified identifier.

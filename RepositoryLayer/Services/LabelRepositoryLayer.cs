@@ -37,21 +37,28 @@ namespace RepositoryLayer.Services
         {
             try
             {
-                var label = new LabelModel()
+                var data = this.authenticationContext.UserAccountTable.Where(user => user.Id == UserId && user.TypeOfUser == "User").FirstOrDefault();
+                if (data != null)
                 {
-                    Label = addLabel.Label,                   
-                    Id= addLabel.Id,
-                    UserId = UserId,
-                   // NoteId=addLabel.NoteId,
-                    CreatedDate = DateTime.Now,
-                    ModifiedDate = DateTime.Now
+                    var label = new LabelModel()
+                    {
+                        Label = addLabel.Label,
+                        Id = addLabel.Id,
+                        UserId = UserId,
+                        // NoteId=addLabel.NoteId,
+                        CreatedDate = DateTime.Now,
+                        ModifiedDate = DateTime.Now
 
-                };
+                    };
 
-                var adddata = this.authenticationContext.Label.Add(label);
-              
-                var result = await authenticationContext.SaveChangesAsync();
-                return true;               
+                    var adddata = this.authenticationContext.Label.Add(label);
+
+                    var result = await authenticationContext.SaveChangesAsync();
+                    return true;
+                }
+                else {
+                    return false;
+                }
             }
             catch (Exception ex)
             {
@@ -66,27 +73,31 @@ namespace RepositoryLayer.Services
         /// <returns>
         /// Updated or Not
         /// </returns>
-        public async Task<bool> UpdateLabel(LabelModel labelModel)
+        public async Task<bool> UpdateLabel(LabelModel labelModel,int UserId)
         {
             try
             {
                 bool idexist = authenticationContext.Label.Any(x => x.Id == labelModel.Id);
                 //// this.authenticationContext.Notes.SingleOrDefault(u => u.Id == updateModel.Id);
-                if (idexist)
+                var userdata = this.authenticationContext.UserAccountTable.Where(user => user.Id == UserId && user.TypeOfUser == "User").FirstOrDefault();
+                if (userdata != null)
                 {
-                    var data = this.authenticationContext.Label.SingleOrDefault(u => u.Id == labelModel.Id && u.UserId==labelModel.UserId);
-                    data.Label = labelModel.Label;
-                    data.ModifiedDate = labelModel.ModifiedDate;
-
-                    var result = await authenticationContext.SaveChangesAsync();
-
-                    if (result > 0)
+                    if (idexist)
                     {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
+                        var data = this.authenticationContext.Label.SingleOrDefault(u => u.Id == labelModel.Id && u.UserId == labelModel.UserId);
+                        data.Label = labelModel.Label;
+                        data.ModifiedDate = labelModel.ModifiedDate;
+
+                        var result = await authenticationContext.SaveChangesAsync();
+
+                        if (result > 0)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                 }
                 return false;
@@ -106,15 +117,22 @@ namespace RepositoryLayer.Services
         /// </returns>
         public async Task<bool> DeleteLabel(int Id,int UserId)
         {
-            var data = this.authenticationContext.Label.Where(u => u.Id == Id && u.UserId==UserId).FirstOrDefault();                   
+            var data = this.authenticationContext.Label.Where(u => u.Id == Id && u.UserId==UserId ).FirstOrDefault();                   
+            var userdata = this.authenticationContext.UserAccountTable.Where(user => user.Id == UserId && user.TypeOfUser == "User").FirstOrDefault();
             if (data != null)
             {
-                var result = authenticationContext.Label.Remove(data);
-                await this.authenticationContext.SaveChangesAsync();
-                return true;
+                if (data != null)
+                {
+                    var result = authenticationContext.Label.Remove(data);
+                    await this.authenticationContext.SaveChangesAsync();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
-            {
+            else {
                 return false;
             }
         }
@@ -129,16 +147,22 @@ namespace RepositoryLayer.Services
         public  IList<LabelModel> Display(int UserId)
         {
             List<LabelModel> label = new List<LabelModel>();
-         
-            foreach (var line in this.authenticationContext.Label)
+            var userdata = this.authenticationContext.UserAccountTable.Where(user => user.Id == UserId && user.TypeOfUser == "User").FirstOrDefault();
+            if (userdata != null)
             {
-                if (UserId == line.UserId)
+                foreach (var line in this.authenticationContext.Label)
                 {
-                    label.Add(line);                   
+                    if (UserId == line.UserId)
+                    {
+                        label.Add(line);
+                    }
                 }
-            }
 
-            return label;
+                return label;
+            }
+            else {
+                return null;
+            }
         }
 
         /// <summary>
@@ -151,21 +175,30 @@ namespace RepositoryLayer.Services
         {
             //// Creates the List To store the all Notes and display the All Untrashed Notes
             List<LabelModel> note = new List<LabelModel>();
-            //// foreach loop to gets the Trashed Fields
-            foreach (var line in this.authenticationContext.Label)
+
+            var userdata = this.authenticationContext.UserAccountTable.Where(user => user.Id == UserId && user.TypeOfUser == "User").FirstOrDefault();
+            if (userdata != null)
             {
-                //// var data=this.authenticationContext.Notes.Where(s =>  s.Content.Contains(input));
-                ////checking if trash is false then store it into the node 
-                if (line.UserId == UserId)
+                //// foreach loop to gets the Trashed Fields
+                foreach (var line in this.authenticationContext.Label)
                 {
-                    if (line.Label.Contains(input) )
+                    //// var data=this.authenticationContext.Notes.Where(s =>  s.Content.Contains(input));
+                    ////checking if trash is false then store it into the node 
+                    if (line.UserId == UserId)
                     {
-                        note.Add(line);
+                        if (line.Label.Contains(input))
+                        {
+                            note.Add(line);
+                        }
                     }
                 }
+                return note;
             }
-            return note;
-           }
+            else
+            {
+                return null;
+            }
+        }
 
         /// <summary>
         /// Determines whether [is insert list of labels] [the specified labels].
@@ -180,38 +213,41 @@ namespace RepositoryLayer.Services
             try
             {
                string labellist = Convert.ToString(labels);
-             
-                foreach (var Id in labels.ToList())
+                var data = this.authenticationContext.UserAccountTable.Any(x => x.TypeOfUser == "User" );
+                if (data)
                 {
-                    foreach (var note in this.authenticationContext.Label)
+                    foreach (var Id in labels.ToList())
                     {
-                        
-                        //// checking the notes Id and UserId is Availabel or not into the databse
-                        // var data = this.authenticationContext.Notes.Where(u => u.Id == Id && u.UserId == UserId).FirstOrDefault();
- 
-
-                        var label = new LabelModel()
+                        foreach (var note in this.authenticationContext.Label)
                         {
-                            Label = labellist,
-                            UserId = UserId,
-                            //NoteId = NoteId,
-                            CreatedDate = DateTime.Now,
-                            ModifiedDate = DateTime.Now
 
-                        };
+                            //// checking the notes Id and UserId is Availabel or not into the databse
+                            // var data = this.authenticationContext.Notes.Where(u => u.Id == Id && u.UserId == UserId).FirstOrDefault();
 
-                        var adddata = this.authenticationContext.Label.Add(label);
 
-                        if (adddata != null)
-                        {
-                            var result = await authenticationContext.SaveChangesAsync();
-                            return true;
+                            var label = new LabelModel()
+                            {
+                                Label = labellist,
+                                UserId = UserId,
+                                //NoteId = NoteId,
+                                CreatedDate = DateTime.Now,
+                                ModifiedDate = DateTime.Now
+
+                            };
+
+                            var adddata = this.authenticationContext.Label.Add(label);
+
+                            
+                             await this.authenticationContext.SaveChangesAsync();
+                           
                         }
-                        else
-                        {
-                            return false;
-                        }
+                        return true;
                     }
+                   
+                }
+                else
+                {
+                    return false;
                 }
                 return false;
                 

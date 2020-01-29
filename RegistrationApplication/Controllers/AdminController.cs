@@ -121,8 +121,23 @@ namespace FundooNotesAPI.Controllers
         [HttpGet("CountUsers")]
         public IActionResult AllUsers()
         {
-            var result = this.adminBusinessLayer.AdvanceUsers();
-            return Ok(new { result });
+            var UserId = (User.FindFirst("Admin")?.Value);
+           // var role = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Admin");
+                if (UserId != null)
+                {
+                    var result = this.adminBusinessLayer.AdvanceUsers();
+                    return Ok(new { result });
+                }
+                else
+                {
+                status = "False";
+                message = "Unauthorize User";
+               // var ErrorCode= this.Unauthorized();
+                return Unauthorized();
+                
+              // return BadRequest(new { status, message, ErrorCode });
+                }
+         
         }
 
         /// <summary>
@@ -228,7 +243,7 @@ namespace FundooNotesAPI.Controllers
                         var claims = new List<Claim>
                      {
                       new Claim("Id",row.Id.ToString()),
-                      new Claim("Email", adminLogin.Email),
+                      new Claim("Email", row.Email),
                       new Claim("Admin",ClaimTypes.Role)
                       };
 

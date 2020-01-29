@@ -9,6 +9,7 @@ namespace BusinessLayer.Interface
 {
     using CommonLayer.Model;
     using CommonLayer.Request;
+    using CommonLayer.Response;
     using Microsoft.AspNetCore.Http;
     using System;
     using System.Collections.Generic;
@@ -32,7 +33,7 @@ namespace BusinessLayer.Interface
         /// </summary>
         /// <param name="loginmodel">The loginmodel.</param>
         /// <returns></returns>
-        Task<string> Login(LoginModel loginmodel);
+        Task<UserLoginResponseModel> Login(LoginModel loginmodel);
 
      
         Task<bool> LoginWithGoogle(SocialLoginModel socialLoginModel);

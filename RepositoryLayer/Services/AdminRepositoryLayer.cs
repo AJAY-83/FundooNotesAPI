@@ -141,7 +141,8 @@ namespace RepositoryLayer.Services
         public IList<AccountModel> Users()
         {
             List<AccountModel> users = new List<AccountModel>();
-
+           // var checksServices = this.authentication.UserAccountTable.Where(pinuser => pinuser.Services == "Advance" && pinuser.TypeOfUser == "Admin").FirstOrDefault();
+        
             foreach (var line in this.authentication.UserAccountTable)
             {
                 if (line.Services == "basic" || line.TypeOfUser == "Basic" || line.TypeOfUser=="Advance"||line.TypeOfUser=="advance")

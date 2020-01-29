@@ -53,11 +53,11 @@ namespace BusinessLayer.Services
         /// </summary>
         /// <param name="labelModel">The label model.</param>
         /// <returns>model empty</returns>
-        public async Task<bool> UpdateLabel(LabelModel labelModel)
+        public async Task<bool> UpdateLabel(LabelModel labelModel,int UserId)
         {
             if (labelModel != null)
             {
-                var result = await this.labelRepositoryLayer.UpdateLabel(labelModel);
+                var result = await this.labelRepositoryLayer.UpdateLabel(labelModel,UserId);
                 return result;
             }
             else {

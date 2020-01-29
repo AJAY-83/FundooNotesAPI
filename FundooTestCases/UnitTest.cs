@@ -1,9 +1,9 @@
-//// --------------------------------------------------------------------------------------------------------------------
-//// <copyright file="UnitTest.cs" company="Bridgelabz">
-////   Copyright © 2019 Company="BridgeLabz"
-//// </copyright>
-//// <creator name="Ajay Lodale"/>
-//// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file = "UnitTest.cs" company="Bridgelabz">
+//   Copyright © 2019 Company="BridgeLabz"
+// </copyright>
+// <creator name = "Ajay Lodale" />
+// --------------------------------------------------------------------------------------------------------------------
 //namespace FundooTestCases
 //{
 //    using RepositoryLayer.Interface;
@@ -33,7 +33,7 @@
 
 //            var model = new AccountModel()
 //            {
-//                FirstName="FirstName",
+//                FirstName = "FirstName",
 //                LastName = "LastName",
 //                MobileNumber = 123456789,
 //                Email = "Email",
@@ -60,7 +60,7 @@
 //            };
 //            var data = businesslayer.Login(model);
 //            Assert.NotNull(data);
-           
+
 //        }
 
 //        /// <summary>
@@ -75,7 +75,7 @@
 //            var model = new ForgetPasswordModel()
 //            {
 //                Email = "ajaylodale45@gamil.com"
-               
+
 //            };
 //            var data = businesslayer.ForgetPassword(model);
 //            Assert.NotNull(data);
@@ -93,7 +93,7 @@
 //            var model = new ResetPasswordModel()
 //            {
 //                Password = "Password",
-//                Token="adasdFDCSFSD.345435fssf.hfgh6"
+//                Token = "adasdFDCSFSD.345435fssf.hfgh6"
 
 //            };
 //            var data = businesslayer.ResetPassword(model);
@@ -103,46 +103,46 @@
 //        /// <summary>
 //        /// Noteses this instance.
 //        /// </summary>
-//        //[Fact] 
-//        //public void Notes()
-//        //{
-//        //    var Repository = new Mock<INotesRepositoryLayer>();
-//        //    var businesslayer = new NotesBusinessLayerServices(Repository.Object);
+//        [Fact]
+//        public void Notes()
+//        {
+//            var Repository = new Mock<INotesRepositoryLayer>();
+//            var businesslayer = new NotesBusinessLayerServices(Repository.Object);
 
-//        //    var model = new NotesModel()
-//        //    {
-//        //        Id = 4,
-//        //        Title = "string",
-//        //        Content="string",
-//        //        Image="image",
-//        //        Color="color",
-//        //        IsActive=true,
-//        //        UserId=3
+//            var model = new NotesModel()
+//            {
+//                Id = 4,
+//                Title = "string",
+//                Content = "string",
+//                Image = "image",
+//                Color = "color",
+//                IsActive = true,
+//                UserId = 3
 
-//        //    };
+//            };
 
-//        //    var data = businesslayer.AddNotes(model);
-//        //    Assert.NotNull(data);           
-//        //}
+//            var data = businesslayer.AddNotes(model);
+//            Assert.NotNull(data);
+//        }
 
-//        //[Fact]
-//        //public void Label()
-//        //{
-//        //    var Repository = new Mock<ILabelRepositoryLayer>();
-//        //    var businesslayer = new AdminBusinessService(Repository.Object);
+//        [Fact]
+//        public void Label()
+//        {
+//            var Repository = new Mock<ILabelRepositoryLayer>();
+//            var businesslayer = new AdminBusinessService(Repository.Object);
 
-//        //    var model = new LabelModel()
-//        //    {
-//        //        NoteId = 4,
-//        //        Id = 2,
-//        //        UserId = 3,
-//        //        Label = "string"
-//        //    };
+//            var model = new LabelModel()
+//            {
+//                NoteId = 4,
+//                Id = 2,
+//                UserId = 3,
+//                Label = "string"
+//            };
 
-//        //    var data = businesslayer.AddLabel(model);
-//        //    Assert.NotNull(data);
-//        //}
-        
+//            var data = businesslayer.AddLabel(model);
+//            Assert.NotNull(data);
+//        }
+
 
 //    }
 //}

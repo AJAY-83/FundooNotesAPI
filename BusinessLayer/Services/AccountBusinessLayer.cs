@@ -11,6 +11,7 @@ namespace BusinessLayer.Services
     using CommonLayer.Constance;
     using CommonLayer.Model;
     using CommonLayer.Request;
+    using CommonLayer.Response;
     using Microsoft.AspNetCore.Http;
     using RepositoryLayer.Interface;
     using System;
@@ -66,7 +67,7 @@ namespace BusinessLayer.Services
         /// </summary>
         /// <param name="loginmodel">The loginmodel.</param>
         /// <returns>login user </returns>
-        public async Task<string> Login(LoginModel loginmodel)
+        public async Task<UserLoginResponseModel> Login(LoginModel loginmodel)
         {
             if (loginmodel != null)
             {
@@ -75,7 +76,7 @@ namespace BusinessLayer.Services
             }
             else
             {
-                return ErrorMessages.emptymodel;
+                return null;
             }
         }
 

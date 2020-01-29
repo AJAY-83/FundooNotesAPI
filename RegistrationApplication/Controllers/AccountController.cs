@@ -23,7 +23,9 @@ namespace FundooNotesAPI.Controllers
     using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.IdentityModel.Tokens;
+    using RepositoryLayer.Context;
 
     /// <summary>
     /// AccountContrtoller have Account name controller to handle the Application
@@ -35,7 +37,9 @@ namespace FundooNotesAPI.Controllers
     {
         private IAccountBusinessLayer account;
 
+        private readonly AuthenticationContext authentication;
 
+        private readonly IConfiguration configuration;
 
 
 
@@ -43,9 +47,11 @@ namespace FundooNotesAPI.Controllers
         /// Initializes a new instance of the <see cref="AccountController"/> class.
         /// </summary>
         /// <param name="account">The account.</param>
-        public AccountController(IAccountBusinessLayer account)
+        public AccountController(IAccountBusinessLayer account, AuthenticationContext authentication, IConfiguration configuration)
         {
             this.account = account;
+            this.authentication = authentication;
+            this.configuration = configuration;
         }
 
         //[EnableCors]
@@ -66,6 +72,8 @@ namespace FundooNotesAPI.Controllers
         //    return Challenge(new AuthenticationProperties { RedirectUri = "/" });
         //}
 
+        string message = "";
+        string status = "";
         /// <summary>
         /// Registrations the specified model.
         /// </summary>
@@ -73,18 +81,20 @@ namespace FundooNotesAPI.Controllers
         /// <returns>registration complet</returns>
         [HttpPost("SignUp")] 
         [AllowAnonymous]
-        public async Task<IActionResult> Registration(SignUpRequest data)
+        public async Task<IActionResult> Registration(SignUpRequest signupdata)
         {
-            var status = await account.Registration(data);
+            var data = await account.Registration(signupdata);
 
-            if (status == true)
+            if (data == true)
              {
-                string message = "Registration completed successfully";
+                 message = "Registration completed successfully";
+                 status = "True";
                 return Ok(new { status, message, data });
              }
             else
             {
-                string message = "Not Registered";
+                 message = "Not Registered";
+                status = "False";
                 return BadRequest(new { status, message });
             }
         }
@@ -100,18 +110,28 @@ namespace FundooNotesAPI.Controllers
         public async Task<IActionResult> Login([FromForm] LoginModel user)
         {
 
-            var status = await account.Login(user);
+            var data = await account.Login(user);
+            var token = LoginToken(user);
+            if (data.TypeOfUser != "Admin" || data.TypeOfUser != "admin")
+            {
+                if (data != null)
+                {
+                    status = "True";
+                    message = "Login Successfully";
 
-            if (status != null)
-            {
-                string message = "Login Successfully";
-                return Ok(new { status, message,user });
+                    return Ok(new { status, message, data, token });
+                }
+                else
+                {
+                    message = "Not Login";
+                    status = "False";
+                    return BadRequest(new { status, message });
+                }
             }
-            else
-            {
-                string message = "Not Login";
-                return BadRequest(new { status, message }); 
+            else {
+                return this.Unauthorized();
             }
+           
         }
 
         /// <summary>
@@ -129,13 +149,15 @@ namespace FundooNotesAPI.Controllers
 
             if (data == true)
             {
-                string message = "Login with Google";
-                return Ok(new { data, message });
+                 message = "Login with Google";
+                 status = "True";
+                return Ok(new { status, message, data });
             }
             else
             {
-                string message = "Logout from Google";
-                return Ok(new { data, message });
+                 status = "False";
+                 message = "Logout from Google";
+                return Ok(new { status, message });
             }
         }
 
@@ -148,17 +170,19 @@ namespace FundooNotesAPI.Controllers
         public IActionResult ForgetPassword(ForgetPasswordModel passwordModel)
         {
 
-            var result = account.ForgetPassword(passwordModel);
+            var data = account.ForgetPassword(passwordModel);
 
-            if (result != null)
+            if (data != null)
             {
-                string message = "Check your Email ";
-                return Ok(new { message, result });
+                 message = "Check your Email ";
+                 status = "True";
+                return Ok(new { status,message,data });
             }
             else
             {
-                string message = "Check your Email ";
-                return BadRequest( new { message, result });
+                 message = "Check your Email ";
+                status = "False";
+                return BadRequest( new { status,message });
             }
         }
 
@@ -171,18 +195,20 @@ namespace FundooNotesAPI.Controllers
         public async Task<IActionResult> ResetPassword(ResetPasswordModel resetPassword)
         {
             //// var useremail = HttpContext.User.Claims;
-           var result = account.ResetPassword(resetPassword);
+           var data = account.ResetPassword(resetPassword);
 
 
-            if (result != null)
+            if (data != null)
             {
-                string message = "Reset Password Successfully";
-                return Ok(new { result, message,resetPassword });
+                 message = "Reset Password Successfully";
+                status = "True";
+                return Ok(new { status, message,data });
             }
             else
             {
-                string message = "Not Reset Password";
-                return BadRequest(new { result, message });
+                 message = "Not Reset Password";
+                status="False";
+                return BadRequest(new { status, message });
             }            
         }
 
@@ -196,15 +222,17 @@ namespace FundooNotesAPI.Controllers
         {
             var HostName = Dns.GetHostName();
             int Id = Convert.ToInt32(User.FindFirst("Id")?.Value);
-            var status=await this.account.ProfilePicture(Id, file);
-            if (status != null)
+            var data= await this.account.ProfilePicture(Id, file);
+            if (data != null)
             {
-                string message = "Profile Picture has been Uploaded";
+                status = "True";
+                 message = "Profile Picture has been Uploaded";
                 return Ok(new { status, message,file.FileName, HostName });
             }
             else
             {
-                string message = "Proifle picture not uploaded";
+                status = "False";
+                 message = "Proifle picture not uploaded";
                 return BadRequest(new { status, message });
             }
         }
@@ -216,5 +244,57 @@ namespace FundooNotesAPI.Controllers
 
         //    return Ok();
         //}
+
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpGet("LoginToken")]
+        public string LoginToken(LoginModel adminLogin)
+        {
+            try
+            {
+                // var data =  this.authentication.UserAccountTable.Where(table => table.Email == adminLogin.Email && table.Password == adminLogin.Password).SingleOrDefault();
+                var row = authentication.UserAccountTable.Where(u => u.Email == adminLogin.Email).SingleOrDefault();
+                bool IsValidUser = authentication.UserAccountTable.Any(x => x.Email == adminLogin.Email && x.Password == adminLogin.Password);
+
+                if (row != null)
+                {
+
+                    if (IsValidUser)
+                    {
+                        var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["SecretKey:Key"]));
+
+                        var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+
+                        var claims = new List<Claim>
+                     {
+                      new Claim("Id",row.Id.ToString()),
+                      new Claim("Email", adminLogin.Email),
+                      new Claim("User",ClaimTypes.Role)
+                      };
+
+                        var tokeOptions = new JwtSecurityToken(
+                           claims: claims,
+                           expires: DateTime.Now.AddDays(1),
+                           signingCredentials: signinCredentials
+                       );
+                        var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+                        return tokenString.ToString();
+                    }
+                    else
+                    {
+                        return "Token Not Generated";
+                    }
+                }
+                else
+                {
+                    return "Email or Password is wrong";
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
     }
 }

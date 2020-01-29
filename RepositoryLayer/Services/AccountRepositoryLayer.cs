@@ -31,6 +31,7 @@ namespace RepositoryLayer.Services
     using CloudinaryDotNet;
     using Microsoft.Extensions.Configuration;
     using CommonLayer.Request;
+    using CommonLayer.Response;
 
     /// <summary>
     /// AccountRepositoryLayer is class which Inherited from the IAccountRepositoryLayer
@@ -128,38 +129,32 @@ namespace RepositoryLayer.Services
         /// </summary>
         /// <param name="user">user</param>
         /// <returns>Message</returns>
-        public async Task<string> Login(LoginModel user)
+        public async Task<UserLoginResponseModel> Login(LoginModel user)
         {
-
-            bool IsValidUser = authentication.UserAccountTable.Any(x => x.Email == user.Email && x.Password==user.Password && x.Status !="In-Active" || x.Status !="Pending");
+            UserLoginResponseModel userLoginResponseModel = new UserLoginResponseModel(); 
+            bool IsValidUser = authentication.UserAccountTable.Any(x => x.Email == user.Email && x.Password == user.Password && x.Status != "In-Active" || x.Status != "Pending");
             var row = authentication.UserAccountTable.Where(u => u.Email == user.Email).FirstOrDefault();
 
             if (IsValidUser)
             {
-                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuraion["SecretKey:Key"]));
-
-                var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-
-                var claims = new List<Claim>
-                     {
-                      new Claim("Id",row.Id.ToString()),
-                      new Claim("Email", user.Email),
-                      new Claim(ClaimTypes.Role, "User")           
-                      };
-
-                var tokeOptions = new JwtSecurityToken(                 
-                   claims: claims,
-                   expires: DateTime.Now.AddDays(1),
-                   signingCredentials: signinCredentials
-               );
-
-                var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
-                return  tokenString;
-            }
-                else
+                if (row.TypeOfUser =="User" || row.TypeOfUser =="user")
                 {
-                   return ErrorMessages.InvalidUser;
+                    var response = new UserLoginResponseModel()
+                    {
+                        Id= row.Id,
+                        FirstName= row.FirstName,
+                        LastName= row.LastName,
+                        Email= row.Email,
+                        MobileNumber=row.MobileNumber,
+                        TypeOfUser= row.TypeOfUser,
+                        Services= row.Services
+                    };
+                    return response;
                 }
+                return null;
+                
+            }
+            return null;
         }
 
         public async Task<bool> IsLoginWithGoogle(SocialLoginModel socialLoginModel)
@@ -224,6 +219,7 @@ namespace RepositoryLayer.Services
         {
             var stream = resetPassword.Token;
             var handler = new JwtSecurityTokenHandler();
+             
             var jsonToken = handler.ReadToken(stream);
             var tokenS = handler.ReadToken(stream) as JwtSecurityToken;
             var email = tokenS.Claims.FirstOrDefault(claim => claim.Type == "email").Value;

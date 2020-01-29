@@ -37,6 +37,8 @@ namespace FundooNotesAPI.Controllers
             this.labelbusinesslayer = labelbusinesslayer;
         }
 
+        string message = "";
+        string status = "";
         /// <summary>
         /// Adds the label.
         /// </summary>
@@ -48,15 +50,17 @@ namespace FundooNotesAPI.Controllers
             try
             {
                 int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
-                var status = await labelbusinesslayer.AddLabel(addLabel, UserId);
-                if (status == true)
+                var data = await labelbusinesslayer.AddLabel(addLabel, UserId);
+                if (data == true)
                 {
-                    string message = "Label has been added successfully";
+                     message = "Label has been added successfully";
+                     status = "True";
                     return Ok(new { status, message, addLabel });
                 }
                 else
                 {
-                    string message = "Label not added";
+                     message = "Label not added";
+                     status = "False";
                     return Ok(new { status, message });
                 }
             }
@@ -76,15 +80,17 @@ namespace FundooNotesAPI.Controllers
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
             labelModel.UserId = UserId;
-            var status = await labelbusinesslayer.UpdateLabel(labelModel);
+            var data = await labelbusinesslayer.UpdateLabel(labelModel,UserId);
 
-            if (status != null)
+            if (data == true)
             {
-                string message = "Label has been Updated";
+                 message = "Label has been Updated";
+                status = "True";
                 return Ok(new { status, message, labelModel });
             }
             else {
-                string message = "Label is not Updated";
+                 message = "Label is not Updated";
+                status = "False";
                 return Ok(new { status, message });
             }
         }
@@ -128,10 +134,11 @@ namespace FundooNotesAPI.Controllers
         public IActionResult IsSearch(string input)
         {
             int UserId = Convert.ToInt32(User.FindFirst("Id")?.Value);
-            var result = this.labelbusinesslayer.IsSearched(input, UserId);
-            return Ok(new { result });
+            var data = this.labelbusinesslayer.IsSearched(input, UserId);
+            return Ok(new { data });
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpPost("List")]
         public async Task<IActionResult> LabelList(List<string> labels,int NoteId)
         {

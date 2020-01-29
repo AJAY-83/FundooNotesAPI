@@ -10,6 +10,7 @@ namespace RepositoryLayer.Interface
 {
     using CommonLayer.Model;
     using CommonLayer.Request;
+    using CommonLayer.Response;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using System;
@@ -34,7 +35,7 @@ namespace RepositoryLayer.Interface
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        Task<string> Login(LoginModel loginmodel);
+        Task<UserLoginResponseModel> Login(LoginModel loginmodel);
 
         Task<bool> IsLoginWithGoogle(SocialLoginModel socialLoginModel);
         /// <summary>
