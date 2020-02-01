@@ -35,14 +35,17 @@ namespace ElectionService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IUserBusinessLayer, UserBusinessLayer>();
-            services.AddTransient<IUserRL, UserRLServices>();
+            services.AddTransient<IVoterBusinessLayer, VoterBusinessLayer>();
+            services.AddTransient<IVoterRL, VoterRLServices>();
 
             services.AddTransient<IConsituency, ConsituencyBLServices>();
             services.AddTransient<IConsituencyRL, ConsituencyRLServices>();
 
             services.AddTransient<IPartyBL, PartyBLServices>();
             services.AddTransient<IPartyRL, PartyRLServices>();
+
+            services.AddTransient<ICandidateBL, CandidateBLServices>();
+            services.AddTransient<ICandidateRL, CandidateRLServices>();
 
             services.AddDbContext<AuthenticationContext>(opts => opts.UseSqlServer(Configuration["ConnectionStrings:IdentityConnection"]));
             var key = Encoding.UTF8.GetBytes(Configuration["SecretKey:Key"]);

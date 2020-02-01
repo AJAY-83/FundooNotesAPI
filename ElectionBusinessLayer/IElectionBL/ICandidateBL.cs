@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace ElectionBusinessLayer.IElectionBL
 {
-   public interface IPartyBL
+  public  interface ICandidateBL
     {
-        Task<PartyResponse> AddParty(PartyModel partyModel);
+        Task<CandidateResponseModel> AddCandidate(CandidateModel candidateModel);
 
-        Task<bool> DeleteParty(int Id);
+        Task<bool> DeleteCandidate(int Id);
+
+         IList<CandidateModel> DisplayCandidates();
     }
 }

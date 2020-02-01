@@ -12,6 +12,7 @@ namespace ElectionBusinessLayer.ElectionBLService
    public class PartyBLServices:IPartyBL
     {
         private readonly IPartyRL partyRL;
+        
 
         public PartyBLServices(IPartyRL partyRL)
         {
@@ -29,7 +30,19 @@ namespace ElectionBusinessLayer.ElectionBLService
             {
                 throw new Exception(ex.Message);
             }
+        }
 
+       public async Task<bool> DeleteParty(int Id)
+        {
+            try
+            {
+                var result = await this.partyRL.DeleteParty(Id);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

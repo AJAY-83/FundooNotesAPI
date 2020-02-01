@@ -14,12 +14,12 @@ namespace ElectionRepositoryLayer.ElectionRLServices
     public class ConsituencyRLServices : IConsituencyRL
     {
         private readonly AuthenticationContext  authenticationContext;
-        IConfiguration configuration;
+     
 
-        public ConsituencyRLServices(AuthenticationContext authenticationContext, IConfiguration configuration)
+        public ConsituencyRLServices(AuthenticationContext authenticationContext)
         {
             this.authenticationContext = authenticationContext;
-            this.configuration = configuration;
+         
         }
 
         public async Task<ConsituencyReponseModel> AddConsituenct(ConsituencyModel consituencyModel)

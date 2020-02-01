@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace ElectionRepositoryLayer.IElectionRL
 {
-   public interface IPartyRL
+   public interface ICandidateRL
     {
-        Task<PartyResponse> AddParty(PartyModel partyModel);
-
-        Task<bool> DeleteParty(int Id);
+        Task<CandidateResponseModel> AddCandidate(CandidateModel candidateModel);
+        Task<bool> DeleteCandidate(int Id);
+        IList<CandidateModel> DisplayCandidates();
     }
 }
